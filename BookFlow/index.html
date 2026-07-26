@@ -3,9 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BookFlow</title>
+    <title>BookFlow · Iniciar sesión</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  
+    <link rel="stylesheet" href="login.css">
 </head>
 <body>
-    bookflow
+    <main class="main">
+        <!-- Panel izquierdo -->
+        <section class="panel-izq">
+            <div class="lomo">
+                <span class="line line-0"></span>
+                <span class="line line-1"></span>
+                <span class="line line-2"></span>
+                <span class="line line-3"></span>
+                <span class="line line-2"></span>
+                <span class="line line-1"></span>
+                <span class="line line-0"></span>
+            </div>
+
+            <div class="contenido">
+                <div class="logo">
+                    <span class="icon">
+                        <span class="cover-back"></span>
+                        <span class="pages"></span>
+                        <span class="cover-front"></span>
+                    </span>
+                    <span class="name">BookFlow</span>
+                </div>
+                <p class="slogan"> Organizando historias, inspirando lectores.</p>
+                <p class="caption">Gestor de biblioteca</p>
+            </div>
+        </section>
+
+        <!-- Panel derecho -->
+        <section class="panel-der">
+            <div class="form">
+                <header>
+                    <p class="welcome">Bienvenido de vuelta</p>
+                    <h1>Inicia sesión</h1>
+                    <p class="accede">Accede a tu catálogo, préstamos y reservas.</p>
+                </header>
+
+                <form class="login-form" novalidate>
+                    <div class="field">
+                        <label for="user">Usuario o correo</label>
+                        <input type="text" id="user" name="user" placeholder="luis.lector@bookflow.com">
+                    </div>
+
+                    <div class="field">
+                        <label for="password">Contraseña</label>
+                        <input type="password" id="password" name="password" placeholder="••••••••••••••">
+                    </div>
+
+                    <div class="field-row">
+                        <label class="remember">
+                            <input type="checkbox" id="remember" name="remember">
+                            <span class="checkbox-fake"></span>
+                            Recordarme
+                        </label>
+                        <a href="#" class="link-forget">¿Olvidaste tu contraseña?</a>
+                    </div>
+                    <button type="submit" class="btn-entrar">Entrar a BookFlow</button>
+                </form>
+
+                <footer>
+                ¿Aún no tienes cuenta?
+                <a href="#" class="link-request">Solicítala en tu biblioteca</a>
+                </footer>
+            </div>
+        </section>
+    </main>
 </body>
 </html>

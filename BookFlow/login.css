@@ -1,0 +1,361 @@
+/* ====================================
+   BookFlow - Login
+   ==================================== */
+
+/* Variables - paleta de colores y fuentes */
+:root {
+    --verde: #A5B482;
+    --olivo: #AFA660;
+    --cafe: #956233;
+    --terracota: #822D2C;
+    --vino: #4F2F37;
+    --crema: #F4EFE4;
+
+    --fondo: #FAF7F1;
+    --fondo-soft: #F1EBDF;
+    --ink: #2B1D20;
+    --ink-soft: #6E5C5A;
+
+    --font-display: "Fraunces", Georgia, serif;
+    --font-body: "Work Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+    --radius: 14px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-body);
+    color: var(--ink);
+    background: var(--fondo);
+}
+
+.main {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: minmax(280px, 40%) 1fr;
+}
+
+/* ====================================
+   Panel izquierdo
+   ==================================== */
+
+.panel-izq {
+    position: relative;
+    background: var(--vino);
+    color: var(--crema);
+    padding: 3.5rem 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+.lomo {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 22px;
+    display: flex;
+    flex-direction: column;
+}
+
+.lomo .line {
+    flex: 1;
+}
+
+.line-0 {background: var(--verde);}
+.line-1 {background: var(--olivo);}
+.line-2 {background: var(--cafe);}
+.line-3 {background: var(--terracota);}
+
+.contenido {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    padding-right: 1.5rem;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.icon {
+    position: relative;
+    width: 50px;
+    height: 60px;
+    flex-shrink: 0;
+}
+
+.icon .cover-back {
+    position: absolute;
+    inset: 0;
+    background: var(--olivo);
+    border-radius: 2px 4px 4px 2px;
+    box-shadow: inset -8px 0 0 rgba(13, 39, 8, 0.233);
+}
+
+.icon .pages {
+    position: absolute;
+    top: 1px;
+    bottom: 1px;
+    right: 2px;
+    width: 8px;
+    background: var(--crema);
+    border-radius: 0 4px 3px 0;
+    box-shadow: inset 4px 0 0 rgba(13, 39, 8, 0.116);
+}
+
+.icon .cover-front {
+    position: absolute;
+    inset: 0;
+    width: 85%;
+    background: var(--olivo);
+    border-radius: 2px 3px 3px 2px;
+    box-shadow: inset 2px 0 0 rgba(13, 39, 8, 0.233);
+}
+
+.name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 2rem;
+    letter-spacing: 0.01em;
+}
+
+.slogan {
+    margin: 0;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 1.8rem;
+    line-height: 1.5;
+    color: var(--crema);
+    border-left: 2px solid var(--olivo);
+    padding-left: 1.5rem;
+    max-width: 24ch;
+}
+
+.caption {
+    margin: 0;
+    font-size: 1.2rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--verde);
+}
+
+/* ====================================
+   Panel derecho
+   ==================================== */
+
+.panel-der {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+header {
+    margin-bottom: 2.5rem;
+}
+
+.welcome {
+    margin-bottom: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.1rem;
+    text-transform: uppercase;
+    color: var(--terracota);
+}
+
+header h1 {
+    margin-bottom:0.5rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 2.2rem;
+    color: var(--vino);
+}
+
+.accede {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 1rem;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.field label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--vino);
+}
+
+.field input{
+    border: 1.5px solid var(--fondo-soft);
+    background: white;
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    font-size: 0.9rem;
+    font-family: var(--font-body);
+    color: var(--ink);
+    outline: none;
+    transition: 
+        border-color 0.15s ease, 
+        box-shadow 0.15s ease;
+}
+
+.field input::placeholder {
+    color: #B7A79C;
+}
+
+.field input:focus {  
+    box-shadow: 0 0 0 3px rgba(175, 166, 96, 0.25);
+}
+
+.field-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: -0.3rem;
+}
+
+.remember {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    cursor: pointer;
+    user-select: none;
+}
+
+.remember input{
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.checkbox-fake {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 1.5px solid var(--terracota);
+    display: inline-block;
+    position: relative;
+    flex-shrink: 0;
+
+    transition: 
+        background-color 0.25s ease,
+        border-color 0.25s ease,
+        transform 0.2s ease;
+}
+
+.remember input:checked + .checkbox-fake {
+    background: var(--cafe);
+    border-color: var(--cafe);
+}
+
+.remember input:checked+ .checkbox-fake::after {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    width: 4px;
+    height: 8px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.remember input:focus-visible + .checkbox-fake {
+    box-shadow: 0 0 0 3px rgba(175, 166, 96, 0.35);
+}
+
+.link-forget {
+    font-size: 0.85rem;
+    color: var(--terracota);
+    text-decoration: none;
+}
+
+.link-forget:hover {
+    color: var(--cafe);
+    text-decoration: underline;
+}
+
+.btn-entrar {
+    margin-top: 0.5rem;
+    padding: 0.9rem 1rem;
+    border: none;
+    border-radius: 10px;
+    background: var(--cafe);
+    color: var(--fondo);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: 
+        background 0.15s ease, 
+        transform 0.05s ease;
+}
+
+.btn-entrar:hover {
+    background: var(--terracota);
+}
+
+.btn-entrar:active {
+    transform: translateY(1.5px);
+}
+
+footer {
+    margin-top: 1.8rem;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.link-request {
+    color: var(--cafe);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.link-request:hover {
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 760px) {
+    .main {
+        grid-template-columns: 1fr;
+    }
+
+    .slogan {
+        font-size: 1.5rem;
+    }
+
+    .panel-der {
+        padding-block: 4rem;
+    }
+}
