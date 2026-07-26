@@ -1,11 +1,11 @@
-const spURL = https://kzsxksciruyrlcjkqfqm.supabase.co;
-const spK = sb_publishable_OkJX5qDnmbMmHgOMRILz8Q_1TVu0IEA;
+const spURL = 'https://kzsxksciruyrlcjkqfqm.supabase.co';
+const spK = 'sb_publishable_OkJX5qDnmbMmHgOMRILz8Q_1TVu0IEA';
 
 const sp = window.supabase.createClient(spURL, spK);
 
 async function cargarLibros() {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await sp
             .from('libros') 
             .select('*');
         if (error) {
