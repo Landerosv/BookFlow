@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookFlow · Principal</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="app">
+ 
+        <!-- SideBar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <span class="icon">
+                    <span class="cover-back"></span>
+                    <span class="pages"></span>
+                    <span class="cover-front"></span>
+                </span>
+                <span class="name">BookFlow</span>
+            </div>
+        
+            <nav class="sidebar-nav">        
+                <a href="#" class="nav-link active">
+                    <i data-lucide="house" class="icon"></i>
+                    Principal
+                </a>
+        
+                <div class="nav-group">
+                    <p>Usuarios</p>
+                    <a href="#" class="nav-link">
+                        <i data-lucide="users" class="icon"></i>
+                        Lectores
+                    </a>
+                </div>
+        
+                <div class="nav-group">
+                    <p>Catálogo</p>
+                    <a href="#" class="nav-link">
+                        <i data-lucide="book-open" class="icon"></i>                        Libros
+                    </a>
+
+                    <a href="#" class="nav-link">
+                        <i data-lucide="signature" class="icon"></i>
+                        Autores
+                    </a>
+
+                    <a href="#" class="nav-link">
+                        <i data-lucide="library" class="icon"></i>
+                        Editoriales
+                    </a>
+                </div>
+        
+                <div class="nav-group">
+                    <p>Préstamos</p>
+                    <a href="#" class="nav-link">
+                        <i data-lucide="credit-card" class="icon"></i>
+                        Préstamos
+                    </a>
+                    
+                    <a href="#" class="nav-link">
+                        <i data-lucide="clock-alert" class="icon"></i>
+                        Multas
+                    </a>
+                </div>
+        
+                <div class="nav-group">
+                    <p>Personal</p>
+                    <a href="#" class="nav-link">
+                        <i data-lucide="shield-user" class="icon"></i>
+                        Administradores
+                    </a>
+
+                    <a href="#" class="nav-link">
+                        <i data-lucide="stamp" class="icon"></i>
+                        Bibliotecarios
+                    </a>
+                </div>        
+            </nav>
+        
+            <div class="lomo">
+                <span class="line line-0"></span>
+                <span class="line line-1"></span>
+                <span class="line line-2"></span>
+                <span class="line line-3"></span>
+                <span class="line line-2"></span>
+                <span class="line line-1"></span>
+                <span class="line line-0"></span>
+            </div>
+        </aside>
+    
+        <!-- ============ MAIN ============ -->
+        <main class="main">   
+            <header class="topbar">
+                <div class="tb-right">
+                    <h1>Hola, Luis - Biblioteca Principal</h1> <!--Aqui va el nombre del usuario y nombre de la biblioteca-->
+                    <span class="date">Miércoles, 22 de julio 2026</span> <!--Esto con la fecha del día-->
+                </div>
+
+                <div class="tb-left">
+                    <p>
+                        <span class="tb-name">Luis Landeros</span>
+                        <span class="tb-rol">Administrador</span>
+                    </p>       
+                    <div class="avatar">
+                        <a href="#" class="nav-link">
+                            <i data-lucide="user-round"></i>
+                        </a>
+                    </div>
+                </div>
+        
+                <label class="buscar">
+                    <i data-lucide="search"></i>
+                    <input type="text" placeholder="Buscar libro, lector o autor...">
+                </label>            
+            </header>
+
+
+        </main>
+    </div>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

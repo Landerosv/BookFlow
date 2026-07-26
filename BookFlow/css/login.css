@@ -12,13 +12,12 @@
     --crema: #F4EFE4;
 
     --fondo: #FAF7F1;
-    --fondo-soft: #F1EBDF;
+    --fondo-line: #F1EBDF;
     --ink: #2B1D20;
     --ink-soft: #6E5C5A;
 
     --font-display: "Fraunces", Georgia, serif;
     --font-body: "Work Sans", -apple-system, BlinkMacSystemFont, sans-serif;
-    --radius: 14px;
 }
 
 * {
@@ -210,7 +209,7 @@ header h1 {
 }
 
 .field input{
-    border: 1.5px solid var(--fondo-soft);
+    border: 1.5px solid var(--fondo-line);
     background: white;
     border-radius: 10px;
     padding: 0.8rem 1rem;
@@ -275,7 +274,7 @@ header h1 {
     border-color: var(--cafe);
 }
 
-.remember input:checked+ .checkbox-fake::after {
+.remember input:checked + .checkbox-fake::after {
     content: "";
     position: absolute;
     left: 4px;
@@ -345,7 +344,10 @@ footer {
     text-decoration: underline;
 }
 
-/* Responsive */
+/* ====================================
+   Responsive
+   ==================================== */
+
 @media (max-width: 760px) {
     .main {
         grid-template-columns: 1fr;
