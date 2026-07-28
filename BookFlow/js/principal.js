@@ -1,11 +1,11 @@
-
-    // relleno de la tabla de prestamos recientes
     
      document.addEventListener('DOMContentLoaded', () => {
         cargarPrestamosRecientes();
         cargarTopLibros();
         cargarConteo();
     }); 
+
+    // relleno de la tabla de prestamos recientes
 
     async function cargarPrestamosRecientes() {
         const { data, error } = await sp
@@ -17,7 +17,7 @@
             libros ( nombre )
             `)
         .order( 'fecha_prestamo', { ascending: false } )
-        .limit(7);
+        .limit(6);
 
         if ( error ){
             console.error('error cargando prestamos:', error)
