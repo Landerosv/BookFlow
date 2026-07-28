@@ -13,9 +13,16 @@
 </head>
 <body>
     <div class="app">
+
+        <!-- Botón de menú (solo pantallas chicas) -->
+        <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
  
         <!-- SideBar -->
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="logo">
                 <span class="icon">
                     <span class="cover-back"></span>
@@ -23,6 +30,10 @@
                     <span class="cover-front"></span>
                 </span>
                 <span class="name">BookFlow</span>
+
+                <button class="sidebar-close" id="sidebarClose" aria-label="Cerrar menú">
+                    <i data-lucide="x"></i>
+                </button>
             </div>
         
             <nav class="sidebar-nav">        
@@ -99,12 +110,12 @@
         <main class="main">  
             <!-- Barra encabezado --> 
             <header class="topbar">
-                <div class="tb-right">
+                <div class="tb-left">
                     <h1 id="saludo-header">Hola, Luis - Biblioteca Principal</h1> <!--Aqui va el nombre del usuario y nombre de la biblioteca-->
                     <span class="date" id="fecha">Miércoles, 22 de julio 2026</span> <!--Esto con la fecha del día-->
                 </div>
 
-                <div class="tb-left">
+                <div class="tb-right">
                     <p>
                         <span class="tb-name" id="nombre">Luis Landeros</span>
                         <span class="tb-rol">Administrador</span>
@@ -161,66 +172,68 @@
              <!-- Préstamos + lateral -->
             <section class="content-grid">        
                 <!-- Panel de préstamos recientes -->
-                <article class="panel">
+                <article class="panel panel-loans">
                     <div class="panel-header">
                         <h2>Préstamos recientes</h2>
                         <a href="#" class="panel-link">Ver todos</a>
                     </div>
             
-                    <table class="table-prin">
-                        <thead>
-                        <tr>
-                            <th>Lector</th>
-                            <th>Libro</th>
-                            <th>Fecha</th>
-                            <th>Estado</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td class="cell-name">Lilith Haro</td>
-                            <td>Libro 1</td>
-                            <td>27 jul 2026</td>
-                            <td><span class="badge badge-ok">En curso</span></td>
-                        </tr>
-                        <tr>
-                            <td class="cell-name">Valeria Cervantes</td>
-                            <td>Libro 2</td>
-                            <td>27 jul 2026</td>
-                            <td><span class="badge badge-ok">En curso</span></td>
-                        </tr>
-                        <tr>
-                            <td class="cell-name">Jeanely Ibarra</td>
-                            <td>Libro 3</td>
-                            <td>27 jul 2026</td>
-                            <td><span class="badge badge-warn">Vencido</span></td>
-                        </tr>
-                        <tr>
-                            <td class="cell-name">Dess Saucedo</td>
-                            <td>Libro 4</td>
-                            <td>27 jul 2026</td>
-                            <td><span class="badge badge-done">Devuelto</span></td>
-                        </tr>
-                        <tr>
-                            <td class="cell-name">Sophia Gonzalez</td>
-                            <td>Libro 5</td>
-                            <td>27 jul 2026</td>
-                            <td><span class="badge badge-warn">Vencido</span></td>
-                        </tr>
-                        <tr>
-                            <td class="cell-name">Pepe</td>
-                            <td>Libro 6</td>
-                            <td>27 jul 2026</td>
-                            <td><span class="badge badge-done">Devuelto</span></td>
-                        </tr>
-                        <tr>
-                            <td class="cell-name">Pepe</td>
-                            <td>Libro 7</td>
-                            <td>27 jul 2026</td>
-                            <td><span class="badge badge-done">Devuelto</span></td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-scroll">
+                        <table class="table-prin">
+                            <thead>
+                            <tr>
+                                <th>Lector</th>
+                                <th>Libro</th>
+                                <th>Fecha</th>
+                                <th>Estado</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="cell-name">Lilith Haro</td>
+                                <td>Libro 1</td>
+                                <td>27 jul 2026</td>
+                                <td><span class="badge badge-ok">En curso</span></td>
+                            </tr>
+                            <tr>
+                                <td class="cell-name">Valeria Cervantes</td>
+                                <td>Libro 2</td>
+                                <td>27 jul 2026</td>
+                                <td><span class="badge badge-ok">En curso</span></td>
+                            </tr>
+                            <tr>
+                                <td class="cell-name">Jeanely Ibarra</td>
+                                <td>Libro 3</td>
+                                <td>27 jul 2026</td>
+                                <td><span class="badge badge-warn">Vencido</span></td>
+                            </tr>
+                            <tr>
+                                <td class="cell-name">Dess Saucedo</td>
+                                <td>Libro 4</td>
+                                <td>27 jul 2026</td>
+                                <td><span class="badge badge-done">Devuelto</span></td>
+                            </tr>
+                            <tr>
+                                <td class="cell-name">Sophia Gonzalez</td>
+                                <td>Libro 5</td>
+                                <td>27 jul 2026</td>
+                                <td><span class="badge badge-warn">Vencido</span></td>
+                            </tr>
+                            <tr>
+                                <td class="cell-name">Pepe</td>
+                                <td>Libro 6</td>
+                                <td>27 jul 2026</td>
+                                <td><span class="badge badge-done">Devuelto</span></td>
+                            </tr>
+                            <tr>
+                                <td class="cell-name">Pepe</td>
+                                <td>Libro 7</td>
+                                <td>27 jul 2026</td>
+                                <td><span class="badge badge-done">Devuelto</span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </article>
         
                 <div class="side-col"> 
@@ -271,5 +284,31 @@
     <script>lucide.createIcons();</script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/principal.js"></script>
+    <script>
+        // Toggle del sidebar en pantallas chicas
+        (function () {
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebarClose = document.getElementById('sidebarClose');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            const sidebar = document.getElementById('sidebar');
+
+            function openSidebar() {
+                document.body.classList.add('sidebar-open');
+                document.body.classList.remove('menu-toggle');
+            }
+            function closeSidebar() {
+                document.body.classList.remove('sidebar-open');
+            }
+
+            menuToggle.addEventListener('click', openSidebar);
+            sidebarClose.addEventListener('click', closeSidebar);
+            backdrop.addEventListener('click', closeSidebar);
+
+            // Cierra el sidebar al elegir una opción del nav (móvil)
+            sidebar.querySelectorAll('.nav-link').forEach(function (link) {
+                link.addEventListener('click', closeSidebar);
+            });
+        })();
+    </script>
 </body>
 </html>
