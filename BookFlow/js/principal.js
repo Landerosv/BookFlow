@@ -3,8 +3,15 @@ const spK = 'sb_publishable_OkJX5qDnmbMmHgOMRILz8Q_1TVu0IEA';
 
 //Variables 
 const sp = window.supabase.createClient(spURL, spK);
-const buscador = document.getElementById('buscador');
-const resultados = document.getElementById('resultados');
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    dashboard();
+    initBuscador();
+    cargarPrestamosRecientes();
+    cargarTopLibros();
+    cargarConteo();
+});
 
 //funcion
 async function dashboard() {
@@ -43,9 +50,10 @@ async function dashboard() {
 
 }
 
-dashboard();
-
 //buscador megaaaaaa 
+function initBuscador(){
+const buscador = document.getElementById('buscador');
+const resultados = document.getElementById('resultados');
 if(buscador && resultados){
     buscador.addEventListener('input', async (e) => {
         const texto = e.target.value.trim();
@@ -62,9 +70,10 @@ if(buscador && resultados){
             sp.from('autores').select('nombre').ilike('nombre',`%${texto}%`)
         ]);
 
-        const autoresEncontrados = resAutores.data || [];
         const librosEncontrados = resLibros.data || [];
         const lectoresEncontrados = resLectores.data || [];
+        const autoresEncontrados = resAutores.data || [];
+        
 
         resultados.innerHTML = '';
 
@@ -115,13 +124,8 @@ if(buscador && resultados){
     });
 
 }
+}
 
-    
-     document.addEventListener('DOMContentLoaded', () => {
-        cargarPrestamosRecientes();
-        cargarTopLibros();
-        cargarConteo();
-    }); 
 
     // relleno de la tabla de prestamos recientes
 
@@ -152,11 +156,10 @@ if(buscador && resultados){
             
             const fila = document.createElement ('tr');
             fila.innerHTML = `
-
-                <td class="cell-name">${p.lectores.nombre}</td>
-                <td>${p.libros.nombre}</td>
-                <td>${new Date(p.fecha_prestamo).toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
-                <td><span class="badge ${badgeClass}">${p.estado}</span></td>
+                    <td class="cell-name">${p.lectores ? p.lectores.nombre : 'Sin lector'}</td>
+                    <td>${p.libros ? p.libros.nombre : 'Sin libro'}</td>
+                    <td>${new Date(p.fecha_prestamo).toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                    <td><span class="badge ${badgeClass}">${p.estado}</span></td>
 
             `;
             tbody.appendChild(fila)
@@ -219,7 +222,3 @@ if(buscador && resultados){
         document.querySelectorAll('.stats-num')[3].textContent = totalmultas;
    
     }// end cargar conteo
-
-
-
-

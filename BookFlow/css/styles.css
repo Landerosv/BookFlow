@@ -314,6 +314,25 @@ a {
     color: #B7A79C;
 }
 
+.buscar {
+    position: relative; 
+}
+
+.resultados-dropdown {
+    display: none; 
+    position: absolute;
+    top: calc(100% + 6px); 
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    max-height: 320px;
+    overflow-y: auto;
+    z-index: 50; 
+}
+
 /* ----- Estadísticas ----- */
 .stats{
     display: flex;

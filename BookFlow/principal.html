@@ -100,13 +100,13 @@
             <!-- Barra encabezado --> 
             <header class="topbar">
                 <div class="tb-right">
-                    <h1>Hola, Luis - Biblioteca Principal</h1> <!--Aqui va el nombre del usuario y nombre de la biblioteca-->
-                    <span class="date">Miércoles, 22 de julio 2026</span> <!--Esto con la fecha del día-->
+                    <h1 id="saludo-header">Hola, Luis - Biblioteca Principal</h1> <!--Aqui va el nombre del usuario y nombre de la biblioteca-->
+                    <span class="date" id="fecha">Miércoles, 22 de julio 2026</span> <!--Esto con la fecha del día-->
                 </div>
 
                 <div class="tb-left">
                     <p>
-                        <span class="tb-name">Luis Landeros</span>
+                        <span class="tb-name" id="nombre">Luis Landeros</span>
                         <span class="tb-rol">Administrador</span>
                     </p>       
                     <div class="avatar">
@@ -118,7 +118,8 @@
         
                 <label class="buscar">
                     <i data-lucide="search"></i>
-                    <input type="text" placeholder="Buscar libro, lector o autor...">
+                    <input type="text"  id="buscador" placeholder="Buscar libro, lector o autor...">
+                    <div id="resultados" class="resultados-dropdown"></div>
                 </label>            
             </header>
 
@@ -269,7 +270,6 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>lucide.createIcons();</script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/script.js"></script>
     <script src="js/principal.js"></script>
 </body>
 </html>
