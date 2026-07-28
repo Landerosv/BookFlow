@@ -43,9 +43,8 @@ a {
 }
 
 .app {
-    display: grid;
-    grid-template-columns: var(--sidebar-w) 1fr;
-    height: 100vh;
+    display: block;
+    min-height: 100vh;
 }
 
 /* =========================================================
@@ -53,13 +52,18 @@ a {
    ========================================================= */
 
 .sidebar {
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: var(--sidebar-w);
     background: var(--vino);
     color: var(--crema);
     display: flex;
     flex-direction: column;
     padding: 1.8rem 2rem 1.6rem 1.4rem;
-    overflow: hidden;
+    overflow: visible;
+    z-index: 100;
 }
 
 /* ----- Logo ----- */
@@ -136,12 +140,34 @@ a {
 /* ----- Navegación ----- */
 .sidebar-nav {
     flex: 1;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
     position: relative;
     z-index: 1;
     overflow-y: auto;
+    padding-right: 0.6rem;
+    margin-right: -0.6rem; 
+    scrollbar-width: thin;
+    scrollbar-color: rgba(244, 228, 228, 0.1) transparent;  
+}
+
+.sidebar-nav::-webkit-scrollbar {
+    width: 5px;
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+    background: rgba(244, 239, 228, 0.169);
+    border-radius: 999px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+    background: rgba(244, 239, 228, 0.45);
 }
 
 .nav-group {
@@ -216,10 +242,10 @@ a {
 .menu-toggle {
     display: none;
     position: fixed;
-    top: 1rem;
+    bottom: 1rem;
     left: 1rem;
-    width: 42px;
-    height: 42px;
+    width: 48px;
+    height: 48px;
     align-items: center;
     justify-content: center;
     background: var(--vino);
@@ -249,12 +275,12 @@ a {
    ========================================================= */
 
 .main {
-    padding: 2.15rem 2rem 2.5rem;
+    margin-left: var(--sidebar-w);
+    padding: 1.5rem 1.5rem 0rem;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    height: 100vh;
-    min-height: 0;
+    min-height: 100vh;
 }
 
 /* ----- Topbar ----- */
@@ -388,7 +414,7 @@ a {
 /* ----- Estadísticas ----- */
 .stats {
     display: flex;
-    gap: 1.3rem;
+    gap: 1.2rem;
     flex-shrink: 0;
 }
 
@@ -473,7 +499,6 @@ a {
     text-decoration: underline;
 }
 
-/* Contenedor con scroll propio para la tabla */
 .table-scroll {
     overflow-y: auto;
     overflow-x: auto;
@@ -543,7 +568,7 @@ a {
 .side-col {
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
+  gap: 1.2rem;
 }
  
 .top-books-list {
@@ -660,7 +685,6 @@ a {
    ========================================================= */
 
 @media (max-width: 1140px) {
-    /* En móvil sí se permite scroll de página (deslizador visible) */
     html, body {
         overflow-y: auto;
         overflow-x: hidden;
@@ -672,7 +696,6 @@ a {
         min-height: 100vh;
     }
 
-    /* Sidebar oculto por defecto, se desliza desde la izquierda */
     .sidebar {
         position: fixed;
         top: 0;
@@ -699,7 +722,6 @@ a {
         display: block;
     }
 
-    /* Evita el scroll del fondo mientras el menú está abierto */
     body.sidebar-open {
         overflow: hidden;
     }
@@ -708,15 +730,19 @@ a {
         display: flex;
     }
 
+    body.sidebar-open .menu-toggle {
+        display: none;
+    }
+
     .main {
         height: auto;
         min-height: 100vh;
+        margin-left: 0;
         overflow: visible;
-        padding: 4.5rem 1.2rem 2rem;
-        gap: 1.2rem;
+        padding: 1.5rem 1.5rem 1.5rem;
+        gap: 1.5rem;
     }
 
-    /* Cards apiladas */
     .content-grid {
         grid-template-columns: 1fr;
     }
@@ -725,7 +751,6 @@ a {
         max-height: none;
     }
 
-    /* Tabla legible: fuente más chica y scroll horizontal si hace falta */
     .table-scroll {
         max-height: 340px;
     }
@@ -741,5 +766,31 @@ a {
      .table-prin {
         font-size: 0.8rem;
         min-width: 480px;
+    }
+}
+
+@media (max-width: 700px) {
+    .topbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1.2rem;
+    }
+
+    /* tb-right (avatar + nombre) pasa arriba de tb-left (saludo + fecha) */
+    .tb-right {
+        order: -1;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 0.8rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--fondo-line);
+    }
+
+    .tb-right .avatar {
+        order: -1;
+    }
+
+    .tb-right p {
+        align-items: start;
     }
 }

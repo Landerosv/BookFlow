@@ -1,0 +1,138 @@
+/* ====================================
+   BookFlow - Libros (clases nuevas)
+   Complementa css/styles.css — reutiliza
+   las mismas variables (--vino, --terracota,
+   --cafe, --olivo, --verde, --fondo-line, etc.)
+   ==================================== */
+
+/* ----- Panel del formulario ----- */
+.panel-form {
+    flex-shrink: 0;
+}
+
+.form-libro {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem 1.2rem;
+    align-items: end;
+}
+
+.form-libro .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.form-libro label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--cafe);
+}
+
+.form-libro input {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: var(--ink);
+    background: var(--fondo);
+    border: 1.5px solid var(--fondo-line);
+    border-radius: 8px;
+    padding: 0.55rem 0.7rem;
+}
+
+.form-libro input:focus {
+    outline: none;
+    border-color: var(--terracota);
+    background: var(--card);
+}
+
+.form-libro input::placeholder {
+    color: #B7A79C;
+}
+
+.field-actions {
+    justify-content: flex-end;
+}
+
+/* ----- Botón principal ----- */
+.btn-primary {
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #fff;
+    background: var(--terracota);
+    border: none;
+    border-radius: 999px;
+    padding: 0.6rem 1.6rem;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.btn-primary:hover {
+    background: var(--vino);
+}
+
+/* ----- Mensaje de estado del formulario ----- */
+#estado-mensaje {
+    margin: 0.8rem 0 0;
+    font-size: 0.85rem;
+    font-weight: 500;
+    min-height: 1.1rem;
+}
+
+#estado-mensaje.ok {
+    color: #4F5E38;
+}
+
+#estado-mensaje.error {
+    color: var(--terracota);
+}
+
+/* ----- Acciones en la tabla (editar / borrar) ----- */
+.acciones-cell {
+    display: flex;
+    gap: 0.6rem;
+    white-space: nowrap;
+}
+
+.acciones-cell button {
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 600;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.2rem 0;
+}
+
+.acciones-cell .editar {
+    color: var(--cafe);
+}
+
+.acciones-cell .editar:hover {
+    text-decoration: underline;
+}
+
+.acciones-cell .borrar {
+    color: var(--terracota);
+}
+
+.acciones-cell .borrar:hover {
+    text-decoration: underline;
+}
+
+/* ----- Responsive: formulario a una sola columna ----- */
+@media (max-width: 860px) {
+    .form-libro {
+        grid-template-columns: 1fr;
+    }
+
+    .field-actions {
+        justify-content: stretch;
+    }
+
+    .field-actions .btn-primary {
+        width: 100%;
+    }
+}
