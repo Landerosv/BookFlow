@@ -4,6 +4,7 @@ const spK = 'sb_publishable_OkJX5qDnmbMmHgOMRILz8Q_1TVu0IEA';
 //Variables 
 const sp = window.supabase.createClient(spURL, spK);
 const formLogin = document.querySelector('.login-form');
+const errorLogin = document.getElementById('msj-error');
 
 //Eventos y acciones
 formLogin.addEventListener('submit', async (e) => {
@@ -11,6 +12,10 @@ formLogin.addEventListener('submit', async (e) => {
     const user = document.getElementById('user').value;
     const ps = document.getElementById('password').value;
 
+    errorLogin.classList.remove('error-visible');
+    errorLogin.classList.add('error-hidden');
+    void errorLogin.offsetWidth;
+    
     const { data: perfil, error: errorbusqueda } = await sp 
         .from('bibliotecarios')
         .select('correo')
@@ -18,7 +23,8 @@ formLogin.addEventListener('submit', async (e) => {
         .single();
     
     if(errorbusqueda || !perfil){
-        alert("Usuario o contraseña incorrectos");
+        errorLogin.classList.remove('error-hidden');
+        errorLogin.classList.add('error-visible');
         return;
     }
 
@@ -29,7 +35,8 @@ formLogin.addEventListener('submit', async (e) => {
     });
 
     if(error){
-        alert("Usuario o contraseña incorrecta");
+        errorLogin.classList.remove('error-hidden');
+        errorLogin.classList.add('error-visible');
     }else {
         window.location.href = "principal.html";
     }

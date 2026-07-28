@@ -344,6 +344,36 @@ footer {
     text-decoration: underline;
 }
 
+/*mensaje error*/
+#msj-error {
+    background-color: var(--crema);
+    color: var(--terracota);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.8rem 1rem;
+    border: 1.5px solid var(--terracota);
+    border-radius: 10px;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.error-hidden {
+    display: none;
+}
+
+.error-visible {
+    display: block;
+    animation: shake 0.3s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    50% { transform: translateX(4px); }
+    75% { transform: translateX(-4px); }
+}
+
 /* ====================================
    Responsive
    ==================================== */
