@@ -1,107 +1,117 @@
-    
-     document.addEventListener('DOMContentLoaded', () => {
-        cargarPrestamosRecientes();
-        cargarTopLibros();
-        cargarConteo();
-    }); 
+const spURL = 'https://kzsxksciruyrlcjkqfqm.supabase.co';
+const spK = 'sb_publishable_OkJX5qDnmbMmHgOMRILz8Q_1TVu0IEA';
 
-    // relleno de la tabla de prestamos recientes
+//Variables 
+const sp = window.supabase.createClient(spURL, spK);
+const buscador = document.getElementById('buscador');
+const resultados = document.getElementById('resultados');
 
-    async function cargarPrestamosRecientes() {
-        const { data, error } = await sp
-        .from('prestamos')
-        .select(`
-            fecha_prestamo,
-            estado,
-            lectores ( nombre ),
-            libros ( nombre )
-            `)
-        .order( 'fecha_prestamo', { ascending: false } )
-        .limit(6);
-
-        if ( error ){
-            console.error('error cargando prestamos:', error)
+//funcion
+async function dashboard() {
+    const {data: {session}, error: errorSesion} = await sp.auth.getSession();
+        if(!session){
+            console.warn("No hay sesión activa, redirigiendo al login");
+            window.location.href = "index.html";
             return;
         }
 
-        const tbody = document.querySelector(' .table-prin tbody ')
-        tbody.innerHTML = '';
+    const correoActivo = session.user.email;
 
-        data.forEach(p => {
-            const badgeClass = p.estado === 'En curso' ? 'badge-ok'
-                                : p.estado === 'Vencido' ? 'badge-warn'
-                                : 'badge-done';
-            
-            const fila = document.createElement ('tr');
-            fila.innerHTML = `
+    const {data: perfil , error: errorPerfil} = await sp
+        .from('bibliotecarios')
+        .select('nombre')
+        .eq('correo', correoActivo)
+        .single();
 
-                <td class="cell-name">${p.lectores.nombre}</td>
-                <td>${p.libros.nombre}</td>
-                <td>${new Date(p.fecha_prestamo).toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
-                <td><span class="badge ${badgeClass}">${p.estado}</span></td>
+    if(perfil){
+        const nombre = perfil.nombre.split(' ') [0];
+        document.getElementById('saludo-header').textContent = `Hola, ${nombre} - Biblioteca Principal`;
+        document.getElementById('nombre').textContent = perfil.nombre;
+    }else{
+        console.error("No se pudo cargar el perfil", errorPerfil);
+    }
 
-            `;
-            tbody.appendChild(fila)
-        });
-    } //end cargarPrestamosRecientes
+    const propiedadesFecha = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    };
 
-    // top libros goat supreme +1000 de aura
-    // nota: para esto hice una vista en supa llamada top_libros
+    const fecha = new Date().toLocaleDateString('es-ES', propiedadesFecha);
+    document.getElementById('fecha').textContent = fecha.charAt(0).toUpperCase() + fecha.slice(1);
 
-    async function cargarTopLibros(){
-        const { data,error } = await sp
-        .from( 'top_libros' )
-        .select('*');
+}
 
-        if (error) {
-            console.error('error cargando top libros:', error);
+dashboard();
+
+//buscador megaaaaaa 
+if(buscador && resultados){
+    buscador.addEventListener('input', async (e) => {
+        const texto = e.target.value.trim();
+
+        if(texto===""){
+            resultados.innerHTML = '';
+            resultados.style.display = 'none';
             return;
         }
 
-        const lista = document.querySelector('.top-books-list');
-        lista.innerHTML = '';
+        const [resLibros, resLectores, resAutores] =  await Promise.all([
+            sp.from('libros').select('nombre').ilike('nombre',`%${texto}%`),
+            sp.from('lectores').select('nombre').ilike('nombre',`%${texto}%`),
+            sp.from('autores').select('nombre').ilike('nombre',`%${texto}%`)
+        ]);
 
-        data.forEach(( libro, index )  => {
-            const li = document.createElement('li');
-            li.innerHTML = `
-                <span class="rank-badge">${index + 1}</span>
-                <div>
-                <p class="rank-title">${libro.libro}</p>
-                <p class="rank-sub">${libro.autor}</p>
+        const autoresEncontrados = resAutores.data || [];
+        const librosEncontrados = resLibros.data || [];
+        const lectoresEncontrados = resLectores.data || [];
+
+        resultados.innerHTML = '';
+
+        if( autoresEncontrados.length === 0 && librosEncontrados.length === 0 && lectoresEncontrados.length === 0){
+            resultados.innerHTML = `
+                                    <div style="padding: 12px; text-align: center; color: #666;">No se encontraron coincidencias para "${texto}"</div>
+                                    `;
+            resultados.style.display = 'block';
+            return;
+        }
+
+        //Autores
+        autoresEncontrados.forEach(autor => {
+            resultados.innerHTML += `
+                <div style="padding: 10px 15px; border-bottom: 1px solid #eee; cursor: pointer;">
+                    <strong> Autor:</strong> ${autor.nombre}
                 </div>
             `;
-        lista.appendChild(li);
-        })
+        });
 
-    }// end cargar libros
-    
-    /// conteo de cositas
+        //Libros
+        librosEncontrados.forEach(libro => {
+            resultados.innerHTML += `
+                <div style="padding: 10px 15px; border-bottom: 1px solid #eee; cursor: pointer;">
+                    <strong> Libro:</strong> ${libro.nombre}
+                </div>
+            `;
+        });
 
-    async function cargarConteo(){
+        //lectores
+        lectoresEncontrados.forEach(lector => {
+            resultados.innerHTML += `
+                <div style="padding: 10px 15px; border-bottom: 1px solid #eee; cursor: pointer;">
+                    <strong> Lector:</strong> ${lector.nombre}
+                </div>
+            `;
+        });
 
-        const { count: totalLibros } = await sp
-        .from('libros')
-        .select('*', { count: 'exact', head: true })
+        resultados.style.display = 'block';
 
-        const { count: totalLectores } = await sp
-        .from('lectores')
-        .select('*', { count: 'exact', head: true })
+    });
 
-        const { count: totalPrestamos } = await sp
-        .from('prestamos')
-        .select('*', { count: 'exact', head: true })
+    //se oculta si se hace clic afuera del buscador jejej
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.buscar')) {
+            resultados.style.display = 'none';
+        }
+    });
 
-        const { count: totalmultas } = await sp
-        .from('multas')
-        .select('*', { count: 'exact', head: true })
-
-        document.querySelectorAll('.stats-num')[0].textContent = totalLibros;
-        document.querySelectorAll('.stats-num')[1].textContent = totalLectores;
-        document.querySelectorAll('.stats-num')[2].textContent = totalPrestamos;
-        document.querySelectorAll('.stats-num')[3].textContent = totalmultas;
-   
-    }// end cargar conteo
-
-
-
-
+}
