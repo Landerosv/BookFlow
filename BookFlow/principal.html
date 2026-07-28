@@ -34,7 +34,7 @@
                 <div class="nav-group">
                     <p>Usuarios</p>
                     <a href="#" class="nav-link">
-                        <i data-lucide="users" class="icon"></i>
+                        <i data-lucide="users-round" class="icon"></i>
                         Lectores
                     </a>
                 </div>
@@ -42,7 +42,8 @@
                 <div class="nav-group">
                     <p>Catálogo</p>
                     <a href="#" class="nav-link">
-                        <i data-lucide="book-open" class="icon"></i>                        Libros
+                        <i data-lucide="book-open" class="icon"></i>
+                        Libros
                     </a>
 
                     <a href="#" class="nav-link">
@@ -94,8 +95,9 @@
             </div>
         </aside>
     
-        <!-- ============ MAIN ============ -->
-        <main class="main">   
+        <!-- Main -->
+        <main class="main">  
+            <!-- Barra encabezado --> 
             <header class="topbar">
                 <div class="tb-right">
                     <h1>Hola, Luis - Biblioteca Principal</h1> <!--Aqui va el nombre del usuario y nombre de la biblioteca-->
@@ -120,7 +122,142 @@
                 </label>            
             </header>
 
+            <!-- Estadísticas -->
+            <section class="stats">
+                <div class="stats-cont">
+                    <i data-lucide="book-marked"></i>
+                    <div>
+                        <span class="stats-num">58</span><br>
+                        <span class="stats-desc">Libros en cátalogo</span>
+                    </div>
+                </div>
 
+                <div class="stats-cont">
+                    <i data-lucide="glasses"></i>
+                    <div>
+                        <span class="stats-num">86</span><br>
+                        <span class="stats-desc">Lectores registrados</span>
+                    </div>
+                </div>
+
+                <div class="stats-cont">
+                    <i data-lucide="folder-open"></i>
+                    <div>
+                        <span class="stats-num">12</span><br>
+                        <span class="stats-desc">Préstamos activos</span>
+                    </div>
+                </div>
+
+                <div class="stats-cont">
+                    <i data-lucide="triangle-alert"></i>
+                    <div>
+                        <span class="stats-num">8</span><br>
+                        <span class="stats-desc">Multas pendientes</span>
+                    </div>
+                </div>
+            </section>
+
+             <!-- Préstamos + lateral -->
+            <section class="content-grid">        
+                <!-- Panel de préstamos recientes -->
+                <article class="panel">
+                    <div class="panel-header">
+                        <h2>Préstamos recientes</h2>
+                        <a href="#" class="panel-link">Ver todos</a>
+                    </div>
+            
+                    <table class="table-prin">
+                        <thead>
+                        <tr>
+                            <th>Lector</th>
+                            <th>Libro</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="cell-name">Lilith Haro</td>
+                            <td>Libro 1</td>
+                            <td>27 jul 2026</td>
+                            <td><span class="badge badge-ok">En curso</span></td>
+                        </tr>
+                        <tr>
+                            <td class="cell-name">Valeria Cervantes</td>
+                            <td>Libro 2</td>
+                            <td>27 jul 2026</td>
+                            <td><span class="badge badge-ok">En curso</span></td>
+                        </tr>
+                        <tr>
+                            <td class="cell-name">Jeanely Ibarra</td>
+                            <td>Libro 3</td>
+                            <td>27 jul 2026</td>
+                            <td><span class="badge badge-warn">Vencido</span></td>
+                        </tr>
+                        <tr>
+                            <td class="cell-name">Dess Saucedo</td>
+                            <td>Libro 4</td>
+                            <td>27 jul 2026</td>
+                            <td><span class="badge badge-done">Devuelto</span></td>
+                        </tr>
+                        <tr>
+                            <td class="cell-name">Sophia Gonzalez</td>
+                            <td>Libro 5</td>
+                            <td>27 jul 2026</td>
+                            <td><span class="badge badge-warn">Vencido</span></td>
+                        </tr>
+                        <tr>
+                            <td class="cell-name">Pepe</td>
+                            <td>Libro 6</td>
+                            <td>27 jul 2026</td>
+                            <td><span class="badge badge-done">Devuelto</span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </article>
+        
+                <div class="side-col"> 
+                    <!-- Panel de top libros -->       
+                    <article class="panel">
+                        <div class="panel-header">
+                            <h2>Top Libros</h2>
+                        </div>
+                        <ul class="top-books-list">
+                            <li>
+                                <span class="rank-badge">1</span>
+                                <div>
+                                    <p class="rank-title">El eco del tiempo</p>
+                                    <p class="rank-sub">Marina Solís</p>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="rank-badge">2</span>
+                                <div>
+                                    <p class="rank-title">Jardines de papel</p>
+                                    <p class="rank-sub">Diego Ferreyra</p>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="rank-badge">3</span>
+                                <div>
+                                    <p class="rank-title">Voces en el andén</p>
+                                    <p class="rank-sub">Julia Nakamura</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </article>
+                    
+                    <!-- Panel de novedades -->
+                    <article class="panel panel-nov">
+                        <p class="nov-title">Novedades de julio</p>
+                        <h3>Nueva colección de literatura infantil</h3>
+                        <p class="nov-text">Ilustrados · a color · tapa dura</p>
+                        <a href="#" class="nov-btn">Ver libros</a>
+                    </article>
+        
+                </div>
+        
+            </section>
         </main>
     </div>
     <script src="https://unpkg.com/lucide@latest"></script>
