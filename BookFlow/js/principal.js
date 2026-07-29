@@ -23,7 +23,7 @@ const vistas = {
     lectores: {
         titulo: "Lectores",
         placeholder: "Buscar por nombre o teléfono...",
-        init: null
+        init: () => Lectores.init()
     },
 
     autores: {

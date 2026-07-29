@@ -1,0 +1,49 @@
+<section class="panel panel-form">
+    <div class="panel-header">
+        <h2>Agregar / Editar lector</h2>
+        <div class="panel-actions">
+            <button type="button" id="cancelar-edicion-lector" class="btn-secondary" disabled>Cancelar edición</button>
+            <button type="submit" form="form-lector" class="btn-primary">
+                <i data-lucide="save"></i>
+                Guardar
+            </button>
+        </div>
+    </div>
+
+    <form id="form-lector" class="form-libro p-libros" autocomplete="off">
+        <input type="hidden" id="lector-id" name="id">
+
+        <div class="field field-nombre">
+            <label for="nombre-lector">Nombre</label>
+            <input type="text" id="nombre-lector" name="nombre" required>
+        </div>
+
+        <div class="field field-telefono">
+            <label for="telefono-lector">Teléfono</label>
+            <input type="tel" id="telefono-lector" name="telefono" maxlength="10" required>
+        </div>
+    </form>
+
+    <p id="estado-mensaje-lector"></p>
+</section>
+
+<section class="panel panel-loans">
+    <div class="panel-header">
+        <h2>Catálogo de lectores</h2>
+    </div>
+
+    <div class="table-scroll">
+        <table class="table-prin">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Teléfono</th>
+                    <th><!-- sin título: columna de acciones --></th>
+                </tr>
+            </thead>
+            <tbody id="tabla-lectores-body">
+            </tbody>
+        </table>
+    </div>
+</section>
