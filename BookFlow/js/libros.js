@@ -267,7 +267,6 @@
         document.getElementById("autor").selectedIndex = 0;
         document.getElementById("editorial").selectedIndex = 0;
         document.getElementById('isbn').disabled = false;
-        btnSubmit.textContent = 'Agregar';  
     } // cancelar edicion
  
     async function borrarLibro(isbn) {
