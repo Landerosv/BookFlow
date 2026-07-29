@@ -1,0 +1,55 @@
+<section class="panel panel-form">
+    <div class="panel-header">
+        <h2>Administración de multas</h2>
+        <div class="panel-actions">
+            <button type="button" id="cancelar-edicion-multa" class="btn-secondary" disabled>Cancelar edición</button>
+            <button type="submit" form="form-multa" class="btn-primary">
+                <i data-lucide="save"></i>
+                Guardar
+            </button>
+        </div>
+    </div>
+
+    <form id="form-multa" class="form-libro p-libros" autocomplete="off">
+        <input type="hidden" id="multa-id" name="id">
+        <div class="field field-id">
+            <label for="id-multa-display">ID Multa seleccionada</label>
+            <input type="text" id="id-multa-display" disabled placeholder="Selecciona una multa de la tabla">
+        </div>
+
+        <div class="field field-status">
+            <label for="status-multa">Status</label>
+            <select id="status-multa" name="status" required>
+                <option value="" disabled selected>Seleccione un estado...</option>
+                <option value="Pagada">Pagada</option>
+                <option value="No pagada">No pagada</option>
+            </select>
+        </div>
+    </form>
+
+    <p id="estado-mensaje-multa"></p>
+</section>
+
+<section class="panel panel-loans">
+    <div class="panel-header">
+        <h2>Catálogo de multas</h2>
+    </div>
+
+    <div class="table-scroll">
+        <table class="table-prin">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>ID prestamo</th>
+                    <th>Monto</th> 
+                    <th>Fecha generada</th> 
+                    <th>Fecha pagada</th> 
+                    <th>Status</th> 
+                    <th><!-- columna de acciones --></th>
+                </tr>
+            </thead>
+            <tbody id="tabla-multas-body">
+            </tbody>
+        </table>
+    </div>
+</section>

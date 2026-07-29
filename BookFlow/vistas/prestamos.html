@@ -1,0 +1,74 @@
+<section class="panel panel-form">
+    <div class="panel-header">
+        <h2>Realizar / actualizar préstamo</h2>
+        <div class="panel-actions">
+            <button type="button" id="cancelar-edicion-prestamo" class="btn-secondary" disabled>Cancelar edición</button>
+            <button type="submit" form="form-prestamo" class="btn-primary">
+                <i data-lucide="save"></i>
+                Guardar
+            </button>
+        </div>
+    </div>
+
+    <form id="form-prestamo" class="form-libro p-libros" autocomplete="off">
+        <input type="hidden" id="prestamo-id" name="id">
+
+        <div class="field field-usuario">
+            <label for="usuario-id">ID Usuario</label>
+            <input type="text" id="usuario-id" name="usuario_id" required>
+        </div>
+
+        <div class="field field-isbn">
+            <label for="libro-isbn">ISBN Libro</label>
+            <input type="text" id="libro-isbn" name="libro_isbn" required>
+        </div>
+
+
+        <div class="field field-fecha-prestamo">
+            <label for="fecha-prestamo">Fecha préstamo</label>
+            <input type="date" id="fecha-prestamo" name="fecha_prestamo" required>
+        </div>
+
+        <div class="field field-fecha-devolucion">
+            <label for="fecha-devolucion">Fecha devolución</label>
+            <input type="date" id="fecha-devolucion" name="fecha_devolucion" required>
+        </div>
+
+        <div class="field field-estado">
+            <label for="estado-devolucion">Estado de la devolución</label>
+            <div class="select-wrapper">
+                <select id="estado-devolucion" name="estado_devolucion" required>
+                    <option value="En curso">En curso</option>
+                    <option value="Devuelto">Devuelto</option>
+                </select>
+                <i data-lucide="chevron-down" class="select-icon"></i>
+            </div>
+        </div>
+    </form>
+
+    <p id="estado-mensaje-prestamo"></p>
+</section>
+
+<section class="panel panel-loans">
+    <div class="panel-header">
+        <h2>Catálogo de préstamos</h2>
+    </div>
+
+    <div class="table-scroll">
+        <table class="table-prin">
+            <thead>
+                <tr>
+                    <th>ID Préstamo</th>
+                    <th>Lector</th>
+                    <th>ISBN</th>
+                    <th>Fecha Préstamo</th>
+                    <th>Fecha Devolución</th>
+                    <th>Estado</th>
+                    <th><!-- columna de acciones --></th>
+                </tr>
+            </thead>
+            <tbody id="tabla-prestamos-body">
+            </tbody>
+        </table>
+    </div>
+</section>
