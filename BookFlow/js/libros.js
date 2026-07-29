@@ -10,7 +10,7 @@
  
     async function init() {
         formLibro = document.getElementById('form-libro');
-        btnSubmit = formLibro.querySelector('.btn-primary');
+        btnSubmit = document.querySelector('button[form="form-libro"]');
         btnCancelar = document.getElementById("cancelar-edicion");
         estadoMensaje = document.getElementById('estado-mensaje');
         tablaBody = document.getElementById('tabla-libros-body');
@@ -30,60 +30,60 @@
         estadoMensaje.classList.add(esError ? 'error' : 'ok');
     } //end mostrar mensajes de error
     
-async function cargarAutores() {
-    const { data, error } = await sp
-        .from("autores")
-        .select("*")
-        .order("nombre");
+    async function cargarAutores() {
+        const { data, error } = await sp
+            .from("autores")
+            .select("*")
+            .order("nombre");
 
-    if (error) {
-        mostrarMensaje(error.message, true);
-        return;
-    }
+        if (error) {
+            mostrarMensaje(error.message, true);
+            return;
+        }
 
-    autores = data;
-    const select = document.getElementById("autor");
+        autores = data;
+        const select = document.getElementById("autor");
 
-    select.innerHTML = `
-        <option value="">Selecciona un autor</option>
-    `;
-
-    autores.forEach(autor => {
-        select.innerHTML += `
-            <option value="${autor.id}">
-                ${autor.nombre}
-            </option>
+        select.innerHTML = `
+            <option value="">Selecciona un autor</option>
         `;
-    });
 
-}
+        autores.forEach(autor => {
+            select.innerHTML += `
+                <option value="${autor.id}">
+                    ${autor.nombre}
+                </option>
+            `;
+        });
 
-async function cargarEditoriales() {
-    const { data, error } = await sp
-        .from("editorial")
-        .select("*")
-        .order("nombre");
+    } // end cargar autores (combobox)
 
-    if (error) {
-        mostrarMensaje(error.message, true);
-        return;
-    }
+    async function cargarEditoriales() {
+        const { data, error } = await sp
+            .from("editorial")
+            .select("*")
+            .order("nombre");
 
-    editoriales = data;
-    const select = document.getElementById("editorial");
+        if (error) {
+            mostrarMensaje(error.message, true);
+            return;
+        }
 
-    select.innerHTML = `
-        <option value="">Selecciona una editorial</option>
-    `;
+        editoriales = data;
+        const select = document.getElementById("editorial");
 
-    editoriales.forEach(editorial => {
-        select.innerHTML += `
-            <option value="${editorial.id}">
-                ${editorial.nombre}
-            </option>
+        select.innerHTML = `
+            <option value="">Selecciona una editorial</option>
         `;
-    });
-}
+
+        editoriales.forEach(editorial => {
+            select.innerHTML += `
+                <option value="${editorial.id}">
+                    ${editorial.nombre}
+                </option>
+            `;
+        });
+    } // end cargar editoriales
 
     async function cargarLibros() {
         try {
