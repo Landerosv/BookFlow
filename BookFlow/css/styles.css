@@ -125,7 +125,7 @@ a {
     color: var(--crema);
     cursor: pointer;
     padding: 0.3rem;
-    border-radius: 8px;
+    border-radius: 10px;
 }
 
 .sidebar-close svg {
@@ -405,11 +405,15 @@ a {
     right: 0;
     background: #fff;
     border: 1px solid #eee;
-    border-radius: 8px;
+    border-radius: 10px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.08);
     max-height: 320px;
     overflow-y: auto;
     z-index: 50; 
+}
+
+.resultados-dropdown.show {
+    display: block;
 }
 
 /* ----- Estadísticas ----- */
@@ -540,6 +544,12 @@ a {
 .cell-name {
   color: var(--ink);
   font-weight: 500;
+}
+
+.cell-vacio {
+  text-align: center;
+  color: var(--ink-soft);
+  padding: 1.4rem 0;
 }
  
 .badge {
@@ -697,6 +707,10 @@ a {
     flex-shrink: 0;
 }
 
+.p-libros {
+    padding: 0rem 1.5rem 0rem 1.5rem;
+}
+
 .form-libro {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -724,8 +738,9 @@ a {
     color: var(--ink);
     background: var(--fondo);
     border: 1.5px solid var(--fondo-line);
-    border-radius: 8px;
+    border-radius: 10px;
     padding: 0.55rem 0.7rem;
+    width: 100%;
 }
 
 .form-libro input:focus {
@@ -738,8 +753,83 @@ a {
     color: #B7A79C;
 }
 
-.field-actions {
-    justify-content: flex-end;
+/* ----- Acciones del panel-form (Cancelar edición / Guardar) -----
+   Viven en el .panel-header, no en el grid del formulario, para
+   que el ancho de los campos de abajo se alinee solo (mismo
+   padding del .panel) con el borde derecho de estos botones. */
+.panel-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-bottom: 12px;
+}
+
+.btn-secondary {
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--cafe);
+    background: transparent;
+    border: 1.5px solid var(--fondo-line);
+    border-radius: 999px;
+    padding: 0.6rem 1.4rem;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    border-color: var(--terracota);
+    color: var(--terracota);
+}
+
+.btn-secondary:disabled {
+    color: var(--ink-soft);
+    border-color: var(--fondo-line);
+    background: var(--fondo);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* ----- Combobox de autor / género / editorial -----
+   Reutiliza el input y el .resultados-dropdown de arriba;
+   aquí solo se agrega lo que hace falta para el ícono. */
+.combo-field {
+    position: relative;
+}
+
+.combo-input {
+    padding-right: 2.1rem !important;
+    cursor: text;
+}
+
+.combo-icon {
+    position: absolute;
+    right: 0.75rem;
+    top: 2.15rem;
+    width: 16px;
+    height: 16px;
+    color: var(--cafe);
+    pointer-events: none;
+}
+
+.combo-field:focus-within .combo-icon {
+    color: var(--terracota);
+}
+
+.combo-field:focus-within .combo-input {
+    border-color: var(--terracota);
+    background: var(--card);
+}
+
+.combo-item {
+    padding: 0.5rem 0.85rem;
+    font-size: 0.85rem;
+    color: var(--ink);
+    cursor: pointer;
+}
+
+.combo-item:hover {
+    background: var(--fondo);
 }
 
 /* ----- Botón principal ----- */
@@ -754,10 +844,22 @@ a {
     padding: 0.6rem 1.6rem;
     cursor: pointer;
     transition: background 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .btn-primary:hover {
     background: var(--vino);
+}
+
+.btn-primary svg {
+    width: 16px;
+    height: 16px;
+}
+
+.hidden {
+    display: none;
 }
 
 /* ----- Mensaje de estado de formularios ----- */
@@ -790,7 +892,18 @@ a {
     background: none;
     border: none;
     cursor: pointer;
-    padding: 0.2rem 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    padding: 0;
+}
+
+.acciones-cell button svg {
+    width: 16px;
+    height: 16px;
 }
 
 .acciones-cell .editar {
@@ -798,7 +911,8 @@ a {
 }
 
 .acciones-cell .editar:hover {
-    text-decoration: underline;
+    background: rgba(149, 98, 51, 0.14);
+    text-decoration: none;
 }
 
 .acciones-cell .borrar {
@@ -806,7 +920,8 @@ a {
 }
 
 .acciones-cell .borrar:hover {
-    text-decoration: underline;
+    background: rgba(130, 45, 44, 0.14);
+    text-decoration: none;
 }
 
 /* =========================================================
@@ -901,12 +1016,14 @@ a {
         grid-template-columns: 1fr;
     }
 
-    .field-actions {
-        justify-content: stretch;
+    .panel-form .panel-header {
+        flex-wrap: wrap;
+        row-gap: 0.8rem;
     }
 
-    .field-actions .btn-primary {
+    .panel-actions {
         width: 100%;
+        justify-content: flex-end;
     }
 }
 
