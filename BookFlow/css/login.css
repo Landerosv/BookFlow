@@ -355,7 +355,8 @@ footer {
     border: 1.5px solid var(--terracota);
     border-radius: 10px;
     text-align: center;
-    margin-bottom: 0.5rem;
+    margin-top: -1rem;
+    margin-bottom: -0.5rem;
 }
 
 .error-hidden {
