@@ -387,9 +387,10 @@ a {
     outline: none;
     font-family: var(--font-body);
     font-size: 0.85rem;
-    width: 200px;
     color: var(--ink);
     background: transparent;
+    flex: 1;
+    min-width: 0; 
 }
 
 .buscar input::placeholder {
@@ -579,6 +580,11 @@ a {
   flex-direction: column;
   gap: 0.95rem;
 }
+
+.top-books-list li > div {
+    flex: 1;
+    min-width: 0;
+}
  
 .top-books-list li {
   display: flex;
@@ -680,6 +686,129 @@ a {
     background: white;
 }
 
+#contenido {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* ----- Formulario ----- */
+.panel-form {
+    flex-shrink: 0;
+}
+
+.form-libro {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem 1.2rem;
+    align-items: end;
+}
+
+.form-libro .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.form-libro label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--cafe);
+}
+
+.form-libro input {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: var(--ink);
+    background: var(--fondo);
+    border: 1.5px solid var(--fondo-line);
+    border-radius: 8px;
+    padding: 0.55rem 0.7rem;
+}
+
+.form-libro input:focus {
+    outline: none;
+    border-color: var(--terracota);
+    background: var(--card);
+}
+
+.form-libro input::placeholder {
+    color: #B7A79C;
+}
+
+.field-actions {
+    justify-content: flex-end;
+}
+
+/* ----- Botón principal ----- */
+.btn-primary {
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #fff;
+    background: var(--terracota);
+    border: none;
+    border-radius: 999px;
+    padding: 0.6rem 1.6rem;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.btn-primary:hover {
+    background: var(--vino);
+}
+
+/* ----- Mensaje de estado de formularios ----- */
+#estado-mensaje {
+    margin: 0.8rem 0 0;
+    font-size: 0.85rem;
+    font-weight: 500;
+    min-height: 1.1rem;
+}
+
+#estado-mensaje.ok {
+    color: #4F5E38;
+}
+
+#estado-mensaje.error {
+    color: var(--terracota);
+}
+
+/* ----- Acciones en tablas (editar / borrar) ----- */
+.acciones-cell {
+    display: flex;
+    gap: 0.6rem;
+    white-space: nowrap;
+}
+
+.acciones-cell button {
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 600;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.2rem 0;
+}
+
+.acciones-cell .editar {
+    color: var(--cafe);
+}
+
+.acciones-cell .editar:hover {
+    text-decoration: underline;
+}
+
+.acciones-cell .borrar {
+    color: var(--terracota);
+}
+
+.acciones-cell .borrar:hover {
+    text-decoration: underline;
+}
+
 /* =========================================================
    RESPONSIVE
    ========================================================= */
@@ -767,6 +896,18 @@ a {
         font-size: 0.8rem;
         min-width: 480px;
     }
+
+    .form-libro {
+        grid-template-columns: 1fr;
+    }
+
+    .field-actions {
+        justify-content: stretch;
+    }
+
+    .field-actions .btn-primary {
+        width: 100%;
+    }
 }
 
 @media (max-width: 700px) {
@@ -793,4 +934,54 @@ a {
     .tb-right p {
         align-items: start;
     }
+}
+
+/* =========================================================
+   Skeleton loader (mientras carga Supabase)
+   ========================================================= */
+
+.skeleton {
+    position: relative;
+    overflow: hidden;
+    background: var(--fondo-line);
+    border-radius: 6px;
+    color: transparent !important;
+    pointer-events: none;
+}
+
+.skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.55),
+        transparent
+    );
+    transform: translateX(-100%);
+    animation: skeleton-sweep 1.3s infinite;
+}
+
+@keyframes skeleton-sweep {
+    100% { transform: translateX(100%); }
+}
+
+.skeleton-row td {
+    padding-block: 0.7rem;
+}
+
+.skeleton-bar {
+    display: inline-block;
+    height: 0.85em;
+    width: 100%;
+    border-radius: 4px;
+}
+
+.stats-num.skeleton {
+    display: inline-block;
+    width: 34px;
+    height: 1.1rem;
+    line-height: 1;
+    margin-bottom: 0.3rem;
 }

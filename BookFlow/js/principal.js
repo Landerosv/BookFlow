@@ -4,17 +4,81 @@ const spK = 'sb_publishable_OkJX5qDnmbMmHgOMRILz8Q_1TVu0IEA';
 //Variables 
 const sp = window.supabase.createClient(spURL, spK);
 
+const vistas = {
+    dashboard: {
+        titulo: null,
+        placeholder: null,
+        init: async () => {
+            await inicioSesion();
+            await cargarDashboard();
+        }
+    },
 
-document.addEventListener('DOMContentLoaded', () => {
-    dashboard();
+    libros: {
+        titulo: "Libros",
+        placeholder: "Buscar por ISBN, nombre o autor...",
+        init: null
+    },
+
+    lectores: {
+        titulo: "Lectores",
+        placeholder: "Buscar por nombre o teléfono...",
+        init: null
+    },
+
+    autores: {
+        titulo: "Autores",
+        placeholder: "Buscar por nombre o nacionalidad...",
+        init: null
+    },
+
+    editoriales: {
+        titulo: "Editoriales",
+        placeholder: "Buscar por nombre o idioma...",
+        init: null
+    },
+
+    prestamos: {
+        titulo: "Préstamos",
+        placeholder: "Buscar por lector o ISBN...",
+        init: null
+    },
+
+    multas: {
+        titulo: "Multas",
+        placeholder: "Buscar por préstamo...",
+        init: null
+    },
+
+    administradores: {
+        titulo: "Administradores",
+        placeholder: "Buscar por nombre, usuario o teléfono...",
+        init: null
+    },
+
+    bibliotecarios: {
+        titulo: "Bibliotecarios",
+        placeholder: "Buscar por nombre, usuario o teléfono...",
+        init: null
+    }
+};
+
+document.addEventListener("DOMContentLoaded", async ()=>{
+    lucide.createIcons();
+    initSidebar();
     initBuscador();
-    cargarPrestamosRecientes();
-    cargarTopLibros();
-    cargarConteo();
+
+    const vistaInicial = location.hash.replace('#', '') || 'dashboard';
+    await cargarVista(vistaInicial);
+});
+
+window.addEventListener('hashchange', () => {
+    const vista = location.hash.replace('#', '') || 'dashboard';
+    cargarVista(vista);
 });
 
 //funcion
-async function dashboard() {
+async function inicioSesion() {
     const {data: {session}, error: errorSesion} = await sp.auth.getSession();
         if(!session){
             console.warn("No hay sesión activa, redirigiendo al login");
@@ -32,7 +96,7 @@ async function dashboard() {
 
     if(perfil){
         const nombre = perfil.nombre.split(' ') [0];
-        document.getElementById('saludo-header').textContent = `Hola, ${nombre} - Biblioteca Principal`;
+        document.getElementById('tb-header').textContent = `Hola, ${nombre} - Biblioteca Principal`;
         document.getElementById('nombre').textContent = perfil.nombre;
     }else{
         console.error("No se pudo cargar el perfil", errorPerfil);
@@ -47,6 +111,37 @@ async function dashboard() {
 
     const fecha = new Date().toLocaleDateString('es-ES', propiedadesFecha);
     document.getElementById('fecha').textContent = fecha.charAt(0).toUpperCase() + fecha.slice(1);
+
+}
+
+function initSidebar() {
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebarClose = document.getElementById('sidebarClose');
+    const backdrop = document.getElementById('sidebarBackdrop');
+    const sidebar = document.getElementById('sidebar');
+
+    function abrirSidebar() {
+        document.body.classList.add('sidebar-open');
+    }
+
+    function cerrarSidebar() {
+        document.body.classList.remove('sidebar-open');
+    }
+
+    menuToggle.addEventListener('click', abrirSidebar);
+    sidebarClose.addEventListener('click', cerrarSidebar);
+    backdrop.addEventListener('click', cerrarSidebar);
+
+    sidebar.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', cerrarSidebar);
+    });
+}
+
+function configurarHeader(titulo, placeholder){
+    document.getElementById("tb-header").textContent = titulo;
+    const buscador = document.getElementById("buscador");
+    buscador.value = "";
+    buscador.placeholder = placeholder;
 
 }
 
@@ -126,95 +221,35 @@ function initBuscador(){
     }
 }
 
-// relleno de la tabla de prestamos recientes
-async function cargarPrestamosRecientes() {
-    const { data, error } = await sp
-    .from('prestamos')
-    .select(`
-        fecha_prestamo,
-        estado,
-        lectores ( nombre ),
-        libros ( nombre )
-        `)
-    .order( 'fecha_prestamo', { ascending: false } )
-    .limit(6);
-
-    if ( error ){
-        console.error('error cargando prestamos:', error)
+async function cargarVista(nombreVista){
+    const cfg = vistas[nombreVista];
+    marcarActivo(nombreVista);
+    if (!cfg) {
+        console.error(`La vista "${nombreVista}" no existe en vistas`);
         return;
     }
 
-    const tbody = document.querySelector(' .table-prin tbody ')
-    tbody.innerHTML = '';
+    const contenedor = document.getElementById("contenido");
+    let respuesta;
 
-    data.forEach(p => {
-        const badgeClass = p.estado === 'En curso' ? 'badge-ok'
-                            : p.estado === 'Vencido' ? 'badge-warn'
-                            : 'badge-done';
-        
-        const fila = document.createElement ('tr');
-        fila.innerHTML = `
-                <td class="cell-name">${p.lectores ? p.lectores.nombre : 'Sin lector'}</td>
-                <td>${p.libros ? p.libros.nombre : 'Sin libro'}</td>
-                <td>${new Date(p.fecha_prestamo).toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
-                <td><span class="badge ${badgeClass}">${p.estado}</span></td>
+    try {
+        respuesta = await fetch(`vistas/${nombreVista}.html`);
+        if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+    } catch (err) {
+        console.error(`No se pudo cargar vistas/${nombreVista}.html`, err);
+        contenedor.innerHTML = `<p>No se pudo cargar esta sección.</p>`;
+        return;
+    }
 
-        `;
-        tbody.appendChild(fila)
+    contenedor.innerHTML = await respuesta.text();
+    lucide.createIcons();
+
+    if (cfg.titulo) configurarHeader(cfg.titulo, cfg.placeholder);
+    if (cfg.init) await cfg.init();
+}
+
+function marcarActivo(nombreVista){
+    document.querySelectorAll('.nav-link[data-vista]').forEach(link => {
+        link.classList.toggle('active', link.dataset.vista === nombreVista);
     });
-} //end cargarPrestamosRecientes
-
-// top libros goat supreme +1000 de aura
-// nota: para esto hice una vista en supa llamada top_libros
-async function cargarTopLibros(){
-    const { data,error } = await sp
-    .from( 'top_libros' )
-    .select('*');
-
-    if (error) {
-        console.error('error cargando top libros:', error);
-        return;
-    }
-
-    const lista = document.querySelector('.top-books-list');
-    lista.innerHTML = '';
-
-    data.forEach(( libro, index )  => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-            <span class="rank-badge">${index + 1}</span>
-            <div>
-            <p class="rank-title">${libro.libro}</p>
-            <p class="rank-sub">${libro.autor}</p>
-            </div>
-        `;
-    lista.appendChild(li);
-    })
-
-}// end cargar libros
-
-/// conteo de cositas
-async function cargarConteo(){
-
-    const { count: totalLibros } = await sp
-    .from('libros')
-    .select('*', { count: 'exact', head: true })
-
-    const { count: totalLectores } = await sp
-    .from('lectores')
-    .select('*', { count: 'exact', head: true })
-
-    const { count: totalPrestamos } = await sp
-    .from('prestamos')
-    .select('*', { count: 'exact', head: true })
-
-    const { count: totalmultas } = await sp
-    .from('multas')
-    .select('*', { count: 'exact', head: true })
-
-    document.querySelectorAll('.stats-num')[0].textContent = totalLibros;
-    document.querySelectorAll('.stats-num')[1].textContent = totalLectores;
-    document.querySelectorAll('.stats-num')[2].textContent = totalPrestamos;
-    document.querySelectorAll('.stats-num')[3].textContent = totalmultas;
-
-}// end cargar conteo
+}
