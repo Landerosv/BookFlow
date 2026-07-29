@@ -1,0 +1,62 @@
+<section class="panel panel-form">
+    <div class="panel-header">
+        <h2>Agregar / Editar editorial</h2>
+        <div class="panel-actions">
+            <button type="button" id="cancelar-edicion-editorial" class="btn-secondary" disabled>Cancelar edición</button>
+            <button type="submit" form="form-editorial" class="btn-primary">
+                <i data-lucide="save"></i>
+                Guardar
+            </button>
+        </div>
+    </div>
+
+    <form id="form-editorial" class="form-libro p-libros" autocomplete="off">
+        <div class="field field-nombre">
+            <label for="nombre-editorial">Nombre</label>
+            <input type="text" id="nombre-editorial" name="nombre" maxlength="100" required>
+        </div>
+
+        <div class="field field-idioma">
+            <label for="idioma">Idioma</label>
+
+            <div class="select-wrapper">
+                <select id="idioma" name="idioma" required>
+                    <option value="">Selecciona un idioma</option>
+                    <option value="Español">Español</option>
+                    <option value="Inglés">Inglés</option>
+                    <option value="Francés">Francés</option>
+                    <option value="Portugués">Portugués</option>
+                    <option value="Alemán">Alemán</option>
+                    <option value="Italiano">Italiano</option>
+                    <option value="Otro">Otro</option>
+                </select>
+
+                <i data-lucide="chevron-down" class="select-icon"></i>
+            </div>
+        </div>
+    </form>
+
+    <p id="estado-mensaje-editorial"></p>
+</section>
+
+<!-- Catálogo de editoriales -->
+<section class="panel panel-loans">
+    <div class="panel-header">
+        <h2>Catálogo de editoriales</h2>
+    </div>
+
+    <div class="table-scroll">
+        <table class="table-prin">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Idioma</th>
+                    <th><!-- sin título: columna de acciones --></th>
+                </tr>
+            </thead>
+            <tbody id="tabla-editoriales-body">
+            </tbody>
+        </table>
+    </div>
+</section>

@@ -24,6 +24,20 @@ const Lectores = (() => {
         estadoMensaje.classList.add(esError ? 'error' : 'ok');
     } // end mostrar mensaje
 
+    function escapeHTML(texto) {
+        return String(texto ?? '').replace(/[&<>"']/g, (c) => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        }[c]));
+    } // end escapar HTML (evita inyección en la tabla)
+
+    function normalizarEspacios(texto) {
+        return texto.trim().replace(/\s+/g, ' ');
+    } // end normalizar espacios repetidos
+
     async function cargarLectores() {
         try {
             const { data, error } = await sp
@@ -50,8 +64,8 @@ const Lectores = (() => {
             const fila = document.createElement('tr');
             fila.innerHTML = `
                 <td>${lector.id}</td>
-                <td>${lector.nombre ?? ''}</td>
-                <td>${lector.telefono ?? ''}</td>
+                <td>${escapeHTML(lector.nombre)}</td>
+                <td>${escapeHTML(lector.telefono)}</td>
 
                 <td class="acciones-cell">
                     <button
@@ -89,11 +103,16 @@ const Lectores = (() => {
     async function guardarLector(e) {
         e.preventDefault();
 
-        const nombre = document.getElementById('nombre-lector').value.trim();
+        const nombre = normalizarEspacios(document.getElementById('nombre-lector').value);
         const telefono = document.getElementById('telefono-lector').value.trim();
 
         if (!nombre) {
             mostrarMensaje('El nombre es obligatorio.', true);
+            return;
+        }
+
+        if (!/[A-Za-zÁÉÍÓÚÑÜáéíóúñü]/.test(nombre)) {
+            mostrarMensaje('El nombre debe contener al menos una letra.', true);
             return;
         }
 
@@ -103,7 +122,7 @@ const Lectores = (() => {
         }
 
         const yaExiste = lectores.some((l) =>
-            l.nombre.trim().toLowerCase() === nombre.toLowerCase() &&
+            normalizarEspacios(l.nombre ?? '').toLowerCase() === nombre.toLowerCase() &&
             String(l.id) !== String(idEnEdicion)
         );
 
@@ -156,7 +175,6 @@ const Lectores = (() => {
         document.getElementById('nombre-lector').value = lector.nombre ?? '';
         document.getElementById('telefono-lector').value = lector.telefono ?? '';
 
-        btnSubmit.textContent = 'Guardar cambios';
         formLector.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } // end cargar lector formulario
 
