@@ -117,6 +117,22 @@ a {
     flex: 1;
 }
 
+.icon-btn{
+    background:none;
+    border:none;
+    cursor:pointer;
+    padding:6px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+}
+
+#isbn:disabled{
+    cursor:not-allowed;
+    background:#ececec;
+}
+
 /* Botón de cerrar sidebar (solo aparece en pantallas pequeñas) */
 .sidebar-close {
     display: none;
@@ -753,10 +769,54 @@ a {
     color: #B7A79C;
 }
 
-/* ----- Acciones del panel-form (Cancelar edición / Guardar) -----
-   Viven en el .panel-header, no en el grid del formulario, para
-   que el ancho de los campos de abajo se alinee solo (mismo
-   padding del .panel) con el borde derecho de estos botones. */
+.field select{
+    width:100%;
+    padding: 0.55rem 0.7rem;
+    border: 1.5px solid var(--fondo-line);
+    border-radius:10px;
+    background: var(--fondo);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: var(--ink);
+    outline:none;
+    transition:.2s;
+}
+
+.select-wrapper{
+    position: relative;
+}
+
+.select-wrapper select{
+    width:100%;
+    padding:12px 42px 12px 14px;
+
+    border:1px solid var(--fondo-line);
+    border-radius:10px;
+
+    background:var(--fondo);
+    color:var(--ink);
+
+    appearance:none;
+    -webkit-appearance:none;
+    -moz-appearance:none;
+
+    font:inherit;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.select-icon{
+    position:absolute;
+    right:14px;
+    top:50%;
+    transform:translateY(-50%);
+    width:18px;
+    height:18px;
+    color:var(--vino);
+    pointer-events:none;
+}
+
+/* ----- Acciones del panel-form (Cancelar edición / Guardar) ----- */
 .panel-actions {
     display: flex;
     align-items: center;
@@ -788,48 +848,6 @@ a {
     background: var(--fondo);
     cursor: not-allowed;
     opacity: 0.7;
-}
-
-/* ----- Combobox de autor / género / editorial -----
-   Reutiliza el input y el .resultados-dropdown de arriba;
-   aquí solo se agrega lo que hace falta para el ícono. */
-.combo-field {
-    position: relative;
-}
-
-.combo-input {
-    padding-right: 2.1rem !important;
-    cursor: text;
-}
-
-.combo-icon {
-    position: absolute;
-    right: 0.75rem;
-    top: 2.15rem;
-    width: 16px;
-    height: 16px;
-    color: var(--cafe);
-    pointer-events: none;
-}
-
-.combo-field:focus-within .combo-icon {
-    color: var(--terracota);
-}
-
-.combo-field:focus-within .combo-input {
-    border-color: var(--terracota);
-    background: var(--card);
-}
-
-.combo-item {
-    padding: 0.5rem 0.85rem;
-    font-size: 0.85rem;
-    color: var(--ink);
-    cursor: pointer;
-}
-
-.combo-item:hover {
-    background: var(--fondo);
 }
 
 /* ----- Botón principal ----- */

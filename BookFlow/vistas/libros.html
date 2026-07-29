@@ -22,29 +22,38 @@
             <input type="text" id="nombre-libro" name="nombre" required>
         </div>
 
-        <!-- Combobox: reutiliza el estilo del input y de .resultados-dropdown
-             (el mismo que usa el buscador del topbar). Solo se agrega
-             .combo-field para posicionar el dropdown y .combo-item para
-             cada opción. -->
-        <div class="field combo-field field-autor">
+        <div class="field field-autor">
             <label for="autor">Autor</label>
-            <input type="text" id="autor" name="autor" class="combo-input" autocomplete="off">
-            <i data-lucide="chevron-down" class="combo-icon"></i>
-            <div class="resultados-dropdown" id="autor-dropdown"></div>
+
+            <div class="select-wrapper">
+                <select id="autor" name="autor" required>
+                    <option value="">Selecciona un autor</option>
+                </select>
+
+                <i data-lucide="chevron-down" class="select-icon"></i>
+            </div>
         </div>
 
-        <div class="field combo-field field-genero">
+        <div class="field field-genero">
             <label for="genero">Género</label>
-            <input type="text" id="genero" name="genero" class="combo-input" autocomplete="off">
-            <i data-lucide="chevron-down" class="combo-icon"></i>
-            <div class="resultados-dropdown" id="genero-dropdown"></div>
+            <select id="genero" name="genero" required>
+                <option value="">Selecciona un género</option>
+                <option value="Novela">Novela</option>
+                <option value="Ciencia ficción">Ciencia ficción</option>
+                <option value="Romance">Romance</option>
+                <option value="Terror">Terror</option>
+                <option value="Historia">Historia</option>
+                <option value="Fantasía">Fantasía</option>
+                <option value="Drama">Drama</option>
+                <option value="Infantil">Infantil</option>
+            </select>
         </div>
 
-        <div class="field combo-field field-editorial">
+        <div class="field field-editorial">
             <label for="editorial">Editorial</label>
-            <input type="text" id="editorial" name="editorial" class="combo-input" autocomplete="off">
-            <i data-lucide="chevron-down" class="combo-icon"></i>
-            <div class="resultados-dropdown" id="editorial-dropdown"></div>
+            <select id="editorial" name="editorial" required>
+                <option value="">Selecciona una editorial</option>
+            </select>
         </div>
 
         <div class="field field-stock">
