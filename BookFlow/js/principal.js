@@ -17,7 +17,7 @@ const vistas = {
     libros: {
         titulo: "Libros",
         placeholder: "Buscar por ISBN, nombre o autor...",
-        init: null
+        init: () => Libros.init()
     },
 
     lectores: {
