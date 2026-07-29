@@ -166,7 +166,6 @@ const Lectores = (() => {
 
         formLector.reset();
         document.getElementById('lector-id').value = '';
-        btnSubmit.textContent = 'Agregar';
     } // end cancelar edicion
 
     async function borrarLector(id) {
