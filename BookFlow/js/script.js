@@ -1,3 +1,6 @@
+const spURL = 'https://kzsxksciruyrlcjkqfqm.supabase.co';
+const spK = 'sb_publishable_OkJX5qDnmbMmHgOMRILz8Q_1TVu0IEA';
+
 //Variables 
 const sp = window.supabase.createClient(spURL, spK);
 const formLogin = document.querySelector('.login-form');
