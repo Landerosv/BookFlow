@@ -1,6 +1,6 @@
 const bibliotecarios = (() => {
     let formBibliotecario, btnSubmitBibliotecario, btnCancelarBibliotecario;
-    let tablaBody, estadoMensaje;
+    let tablaBody, estadoMensaje, contenedorAlerta;
     let listaBibliotecarios = [];
     let idEnEdicion = null;
     let usuarioActual = null;
@@ -8,7 +8,10 @@ const bibliotecarios = (() => {
 
     async function init() {
         tablaBody = document.getElementById('tabla-bibliotecarios-body');
-        estadoMensaje = document.getElementById('estado-mensaje');
+        
+        estadoMensaje = document.getElementById('estado-mensaje-bibliotecario');
+        contenedorAlerta = document.getElementById('contenedor-alerta-bibliotecario');
+        
         formBibliotecario = document.querySelector('.form-crud'); 
         btnSubmitBibliotecario = document.querySelector('button[form="form-crud"]');
         btnCancelarBibliotecario = document.querySelector('.panel-actions .btn-secondary');
@@ -56,9 +59,25 @@ const bibliotecarios = (() => {
     }
 
     function mostrarMensaje(texto, esError) {
-        if (!estadoMensaje) return;
+        if (!estadoMensaje || !contenedorAlerta) return;
+
+        if (!texto) {
+            contenedorAlerta.style.display = 'none';
+            return;
+        }
+
         estadoMensaje.textContent = texto;
-        estadoMensaje.className = esError ? 'error' : 'ok';
+        contenedorAlerta.style.display = 'flex';
+        contenedorAlerta.classList.remove('alerta-error', 'alerta-exito');
+
+        if (esError) {
+            contenedorAlerta.classList.add('alerta-error');
+        } else {
+            contenedorAlerta.classList.add('alerta-exito');
+            setTimeout(() => {
+                contenedorAlerta.style.display = 'none';
+            }, 3000);
+        }
     }
 
     function escapeHTML(texto) {
@@ -152,7 +171,6 @@ const bibliotecarios = (() => {
                 mostrarMensaje('Bibliotecario actualizado correctamente.', false);
 
             } else {
-                // 1. Crear en Supabase Auth
                 const { data: authData, error: authError } = await sp.auth.signUp({
                     email: correo,
                     password: password
@@ -164,7 +182,6 @@ const bibliotecarios = (() => {
                     return;
                 }
 
-                // 2. Crear en la tabla pública
                 const { error: dbError } = await sp
                     .from('bibliotecarios')
                     .insert([{
@@ -183,7 +200,7 @@ const bibliotecarios = (() => {
                 mostrarMensaje('Bibliotecario registrado correctamente.', false);
             }
 
-            cancelarEdicion();
+            cancelarEdicion(false);
             cargarBibliotecarios();
 
         } catch (err) {
@@ -217,7 +234,7 @@ const bibliotecarios = (() => {
         formBibliotecario.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    function cancelarEdicion() {
+    function cancelarEdicion(ocultarAlerta = true) {
         idEnEdicion = null;
         if (btnCancelarBibliotecario) btnCancelarBibliotecario.disabled = true;
         if (formBibliotecario) formBibliotecario.reset();
@@ -228,6 +245,10 @@ const bibliotecarios = (() => {
         const inputPassword = document.getElementById('bib-password');
         inputPassword.disabled = false;
         inputPassword.required = true;
+
+        if (ocultarAlerta !== false) {
+            mostrarMensaje('', false);
+        }
     }
 
     return { init };
