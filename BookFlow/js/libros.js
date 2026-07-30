@@ -185,11 +185,6 @@
             mostrarMensaje('El nombre del libro es obligatorio.', true);
             return;
         }
-
-        if (!/[A-Za-zÁÉÍÓÚÑÜáéíóúñü]/.test(nombre)) {
-            mostrarMensaje('El nombre del libro debe contener al menos una letra.', true);
-            return;
-        }
  
         if (!isbnEnEdicion && libros.some((l) => l.isbn === isbn)) {
             mostrarMensaje('Ese ISBN ya existe. Usa el botón "Editar" en la tabla para modificarlo.', true);

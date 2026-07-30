@@ -823,6 +823,12 @@ a {
     pointer-events:none;
 }
 
+.form-libro .select-wrapper select{
+    padding: 0.55rem 2.6rem 0.55rem 0.7rem;
+    border: 1.5px solid var(--fondo-line);
+    font-size: 0.9rem;
+}
+
 /* ----- Acciones del panel-form (Cancelar edición / Guardar) ----- */
 .panel-actions {
     display: flex;

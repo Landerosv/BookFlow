@@ -1,0 +1,67 @@
+<!-- Formulario de registro / edición de autor -->
+<section class="panel panel-form">
+    <div class="panel-header">
+        <h2>Agregar / Editar autor</h2>
+        <div class="panel-actions">
+            <button type="button" id="cancelar-edicion-autor" class="btn-secondary" disabled>Cancelar edición</button>
+            <button type="submit" form="form-autor" class="btn-primary">
+                <i data-lucide="save"></i>
+                Guardar
+            </button>
+        </div>
+    </div>
+
+    <form id="form-autor" class="form-libro p-libros" autocomplete="off">
+        <div class="field field-nombre">
+            <label for="nombre-autor">Nombre</label>
+            <input type="text" id="nombre-autor" name="nombre" maxlength="100" required>
+        </div>
+
+        <div class="field field-nacionalidad">
+            <label for="nacionalidad">Nacionalidad</label>
+
+            <div class="select-wrapper">
+                <select id="nacionalidad" name="nacionalidad" required>
+                    <option value="">Selecciona una nacionalidad</option>
+                    <option value="Mexicana">Mexicana</option>
+                    <option value="Estadounidense">Estadounidense</option>
+                    <option value="Española">Española</option>
+                    <option value="Argentina">Argentina</option>
+                    <option value="Colombiana">Colombiana</option>
+                    <option value="Chilena">Chilena</option>
+                    <option value="Francesa">Francesa</option>
+                    <option value="Británica">Británica</option>
+                    <option value="Alemana">Alemana</option>
+                    <option value="Italiana">Italiana</option>
+                    <option value="Otra">Otra</option>
+                </select>
+
+                <i data-lucide="chevron-down" class="select-icon"></i>
+            </div>
+        </div>
+    </form>
+
+    <p id="estado-mensaje-autor"></p>
+</section>
+
+<!-- Catálogo de autores -->
+<section class="panel panel-loans">
+    <div class="panel-header">
+        <h2>Catálogo de autores</h2>
+    </div>
+
+    <div class="table-scroll">
+        <table class="table-prin">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Nacionalidad</th>
+                    <th><!-- sin título: columna de acciones --></th>
+                </tr>
+            </thead>
+            <tbody id="tabla-autores-body">
+            </tbody>
+        </table>
+    </div>
+</section>
