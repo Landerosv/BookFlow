@@ -1,6 +1,6 @@
 const prestamos = (() => {
     let formPrestamo, btnSubmitPrestamo, btnCancelarPrestamo;
-    let tablaBody, estadoMensaje;
+    let tablaBody, estadoMensaje, contenedorAlerta;
     let listaPrestamos = [];
     let idEnEdicion = null;
 
@@ -8,6 +8,7 @@ const prestamos = (() => {
     async function init() {
         tablaBody = document.getElementById('tabla-prestamos-body');
         estadoMensaje = document.getElementById('estado-mensaje-prestamo');
+        contenedorAlerta = document.getElementById('contenedor-alerta');
         formPrestamo = document.getElementById('form-prestamo');
         btnSubmitPrestamo = document.querySelector('button[form="form-prestamo"]');
         btnCancelarPrestamo = document.getElementById('cancelar-edicion-prestamo');
@@ -20,10 +21,27 @@ const prestamos = (() => {
     } 
 
     function mostrarMensaje(texto, esError) {
-        if (!estadoMensaje) return;
+        if (!estadoMensaje || !contenedorAlerta) return;
+
+        if (!texto) {
+            contenedorAlerta.style.display = 'none';
+            return;
+        }
+
         estadoMensaje.textContent = texto;
-        estadoMensaje.classList.remove('ok', 'error');
-        estadoMensaje.classList.add(esError ? 'error' : 'ok');
+        contenedorAlerta.style.display = 'flex';
+
+        contenedorAlerta.classList.remove('alerta-error', 'alerta-exito');
+
+        if (esError) {
+            contenedorAlerta.classList.add('alerta-error');
+        } else {
+            contenedorAlerta.classList.add('alerta-exito');
+            
+            setTimeout(() => {
+                contenedorAlerta.style.display = 'none';
+            }, 3000);
+        }
     }
 
     function escapeHTML(texto) {
@@ -223,7 +241,8 @@ function cancelarEdicionPrestamo() {
 
         document.getElementById('prestamo-id').value = '';
 
-        document.getElementById('estado-devolucion').value = 'Selecciona un estado'; 
+        document.getElementById('estado-devolucion').value = 'Selecciona un estado';
+        mostrarMensaje('', false); 
     }
 
     return { init };

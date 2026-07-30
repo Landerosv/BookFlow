@@ -10,6 +10,16 @@
         </div>
     </div>
 
+    <!--contenedor para el msj de error-->
+    <div id="contenedor-alerta" class="alerta-error" style="display: none;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icono-error">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <span id="estado-mensaje-prestamo"></span>
+    </div>
+
     <form id="form-prestamo" class="form-crud p-libros" autocomplete="off">
         <input type="hidden" id="prestamo-id" name="id">
 
@@ -46,7 +56,6 @@
             </div>
         </div>
     </form>
-
     <p id="estado-mensaje-prestamo"></p>
 </section>
 
