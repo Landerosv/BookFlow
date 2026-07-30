@@ -102,6 +102,16 @@ const Lectores = (() => {
             return;
         }
 
+        const yaExiste = lectores.some((l) =>
+            l.nombre.trim().toLowerCase() === nombre.toLowerCase() &&
+            String(l.id) !== String(idEnEdicion)
+        );
+
+        if (yaExiste) {
+            mostrarMensaje('Ya existe un lector registrado con ese nombre.', true);
+            return;
+        }
+
         btnSubmit.disabled = true;
 
         try {
@@ -115,7 +125,12 @@ const Lectores = (() => {
             }
 
             if (error) {
-                mostrarMensaje('Error al guardar: ' + error.message, true);
+                // Violación de unicidad: ya existe un lector con ese nombre
+                if (error.code === '23505') {
+                    mostrarMensaje('Ya existe un lector registrado con ese nombre.', true);
+                } else {
+                    mostrarMensaje('Error al guardar: ' + error.message, true);
+                }
                 return;
             }
 
@@ -151,7 +166,6 @@ const Lectores = (() => {
 
         formLector.reset();
         document.getElementById('lector-id').value = '';
-        btnSubmit.textContent = 'Agregar';
     } // end cancelar edicion
 
     async function borrarLector(id) {
