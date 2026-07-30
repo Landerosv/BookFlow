@@ -50,19 +50,28 @@ const prestamos = (() => {
         }
     }
 
-    function renderTabla() {
+function renderTabla() {
         if (!tablaBody) return;
         tablaBody.innerHTML = '';
 
+        const fechaActual = new Date();
+        const hoy = `${fechaActual.getFullYear()}-${String(fechaActual.getMonth() + 1).padStart(2, '0')}-${String(fechaActual.getDate()).padStart(2, '0')}`;
+
         listaPrestamos.forEach((prestamo) => {
             const fila = document.createElement('tr');
+
+            let estadoVisual = escapeHTML(prestamo.estado);
+            if (prestamo.estado === 'En curso' && prestamo.fecha_devolucion < hoy) {
+                estadoVisual = '<span style="color: #dc2626; font-weight: bold;">Atrasado</span>';
+            }
+
             fila.innerHTML = `
                 <td>${escapeHTML(prestamo.id)}</td>
                 <td>${escapeHTML(prestamo.id_lector)}</td>
                 <td>${escapeHTML(prestamo.isbn)}</td>
                 <td>${escapeHTML(prestamo.fecha_prestamo)}</td>
                 <td>${escapeHTML(prestamo.fecha_devolucion)}</td>
-                <td>${escapeHTML(prestamo.estado)}</td>
+                <td>${estadoVisual}</td>
                 <td class="acciones-cell">
                     ${prestamo.estado === 'Devuelto' 
                         ? `<button type="button" class="icon-btn" disabled style="opacity: 0.5; cursor: not-allowed;" title="Préstamo finalizado">
@@ -82,7 +91,7 @@ const prestamos = (() => {
         tablaBody.querySelectorAll('.editar').forEach((btn) =>
             btn.addEventListener('click', () => cargarPrestamoEnFormulario(btn.dataset.id))
         );
-    } 
+    }
 
     async function guardarPrestamo(e) {  
         e.preventDefault(); 
@@ -92,6 +101,7 @@ const prestamos = (() => {
         const fechaPrestamo = document.getElementById('fecha-prestamo').value;
         const fechaDevolucion = document.getElementById('fecha-devolucion').value;
         const estadoDevolucion = document.getElementById('estado-devolucion').value;
+        
         const fechaActual = new Date();
         const año = fechaActual.getFullYear();
         const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
@@ -118,6 +128,20 @@ const prestamos = (() => {
             return;
         }
 
+        let generarMulta = false;
+        let montoMulta = 0;
+
+        if (estadoDevolucion === 'Devuelto' && fechaHoy > fechaDevolucion) {
+            const fLimite = new Date(fechaDevolucion + 'T00:00:00'); 
+            const fHoy = new Date(fechaHoy + 'T00:00:00');
+            const msPorDia = 1000 * 60 * 60 * 24; 
+            
+            const diasRetraso = Math.floor((fHoy - fLimite) / msPorDia);
+            
+            generarMulta = true;
+            montoMulta = diasRetraso * 25; 
+        }
+
         btnSubmitPrestamo.disabled = true;
     
         try {
@@ -130,6 +154,7 @@ const prestamos = (() => {
             };
 
             let errorSupabase;
+            let prestamoIdGenerado = idEnEdicion; 
 
             if (idEnEdicion) {
                 const { error } = await sp
@@ -138,10 +163,15 @@ const prestamos = (() => {
                     .eq('id', idEnEdicion);
                 errorSupabase = error;
             } else {
-                const { error } = await sp
+
+                const { data, error } = await sp
                     .from('prestamos')
-                    .insert([datosPrestamo]);
+                    .insert([datosPrestamo])
+                    .select();
                 errorSupabase = error;
+                if (data && data.length > 0) {
+                    prestamoIdGenerado = data[0].id;
+                }
             }
  
             if (errorSupabase) {
@@ -152,8 +182,26 @@ const prestamos = (() => {
                 }
                 return;
             }
+
+            if (!errorSupabase && generarMulta && prestamoIdGenerado) {
+                const { error: errorMulta } = await sp
+                    .from('multas')
+                    .insert([{
+                        id_prestamo: prestamoIdGenerado,
+                        monto: montoMulta,
+                        fecha_generada: fechaHoy,
+                        status: 'Pendiente'
+                    }]);
+                
+                if (errorMulta) {
+                    console.error("No se pudo generar la multa:", errorMulta.message);
+                } else {
+                    mostrarMensaje(`Devolución registrada con retraso. Se generó una multa de $${montoMulta} pesos.`, false);
+                }
+            } else {
+                mostrarMensaje(idEnEdicion ? 'Préstamo actualizado correctamente.' : 'Préstamo registrado.', false);
+            }
  
-            mostrarMensaje(idEnEdicion ? 'Préstamo actualizado correctamente.' : 'Préstamo registrado.', false);
             cancelarEdicionPrestamo(); 
             cargarPrestamos();         
 
