@@ -41,7 +41,7 @@ const vistas = {
     prestamos: {
         titulo: "Préstamos",
         placeholder: "Buscar por lector o ISBN...",
-        init: null
+        init: () => prestamos.init()
     },
 
     multas: {
