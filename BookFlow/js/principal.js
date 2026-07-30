@@ -58,7 +58,7 @@ const vistas = {
     bibliotecarios: {
         titulo: "Bibliotecarios",
         placeholder: "Buscar por nombre, usuario o teléfono...",
-        init: null
+        init: () => bibliotecarios.init()
     }
 };
 
@@ -100,15 +100,25 @@ async function inicioSesion() {
 
     const {data: perfil , error: errorPerfil} = await sp
         .from('bibliotecarios')
-        .select('nombre')
+        .select('nombre, usuario') 
         .eq('correo', correoActivo)
         .single();
 
     if(perfil){
-        const nombre = perfil.nombre.split(' ') [0];
+        const nombre = perfil.nombre.split(' ')[0];
         saludoHeader = `Hola, ${nombre} - Biblioteca Principal`;
         document.getElementById('tb-header').textContent = saludoHeader;
         document.getElementById('nombre').textContent = perfil.nombre;
+
+        const elementoRol = document.querySelector('.tb-rol');
+        if (elementoRol) {
+            if (perfil.usuario === 'httpslele') {
+                elementoRol.textContent = 'Administrador';
+            } else {
+                elementoRol.textContent = 'Bibliotecario';
+            }
+        }
+
     }else{
         console.error("No se pudo cargar el perfil", errorPerfil);
     }
@@ -122,7 +132,6 @@ async function inicioSesion() {
 
     const fecha = new Date().toLocaleDateString('es-ES', propiedadesFecha);
     document.getElementById('fecha').textContent = fecha.charAt(0).toUpperCase() + fecha.slice(1);
-
 }
 
 function initSidebar() {
