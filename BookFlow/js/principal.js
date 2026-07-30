@@ -201,6 +201,7 @@ function initBuscador(){
             let lectoresEncontrados = [];
             let editorialesEncontradas = [];
             let bibliotecariosEncontrados = []; 
+            let multasEncontradas = [];
 
             if (vistaActual === 'prestamos') {
                 const [resLibros, resLectores] = await Promise.all([
@@ -210,6 +211,25 @@ function initBuscador(){
                 librosEncontrados = resLibros.data || [];
                 lectoresEncontrados = resLectores.data || [];
                 
+            } else if (vistaActual === 'multas') {
+                let resMultasId = { data: [] };
+                let resMultasPrestamo = { data: [] };
+
+                // Si lo que escribes son puros números, podemos buscar por ID de multa e ID de préstamo de forma segura
+                if (/^\d+$/.test(texto)) {
+                    const [multasId, multasPrestamo] = await Promise.all([
+                        sp.from('multas').select('id_multa, id_prestamo, monto, estado').eq('id_multa', Number(texto)),
+                        sp.from('multas').select('id_multa, id_prestamo, monto, estado').eq('id_prestamo', Number(texto))
+                    ]);
+                    resMultasId = multasId;
+                    resMultasPrestamo = multasPrestamo;
+                }
+                
+                const mapaMultas = new Map();
+                if (resMultasId.data) resMultasId.data.forEach(m => mapaMultas.set(m.id_multa, m));
+                if (resMultasPrestamo.data) resMultasPrestamo.data.forEach(m => mapaMultas.set(m.id_multa, m));
+                multasEncontradas = Array.from(mapaMultas.values());
+
             } else if (vistaActual === 'lectores') {
                 const [resNombres, resTelefonos] = await Promise.all([
                     sp.from('lectores').select('id, nombre, telefono').ilike('nombre', `%${texto}%`),
@@ -222,7 +242,6 @@ function initBuscador(){
                 lectoresEncontrados = Array.from(mapaLectores.values());
                 
             } else if (vistaActual === 'libros') {
-      
                 const [resNombres, resIsbn] = await Promise.all([
                     sp.from('libros').select('isbn, nombre, genero').ilike('nombre', `%${texto}%`),
                     sp.from('libros').select('isbn, nombre, genero').ilike('isbn', `%${texto}%`)
@@ -234,7 +253,6 @@ function initBuscador(){
                 librosEncontrados = Array.from(mapaLibros.values());
                 
             } else if (vistaActual === 'autores') {
-
                 const [resNombres, resNac] = await Promise.all([
                     sp.from('autores').select('id, nombre, nacionalidad').ilike('nombre', `%${texto}%`),
                     sp.from('autores').select('id, nombre, nacionalidad').ilike('nacionalidad', `%${texto}%`)
@@ -268,7 +286,6 @@ function initBuscador(){
                 bibliotecariosEncontrados = Array.from(mapaBibliotecarios.values());
 
             } else {
-                // Búsqueda global (dashboard) - Ya trae todas las columnas
                 const [resLibros, resLectores, resAutores] =  await Promise.all([
                     sp.from('libros').select('isbn, nombre, genero').ilike('nombre',`%${texto}%`),
                     sp.from('lectores').select('id, nombre, telefono').ilike('nombre',`%${texto}%`),
@@ -281,7 +298,7 @@ function initBuscador(){
             
             resultados.innerHTML = '';
 
-            if( autoresEncontrados.length === 0 && librosEncontrados.length === 0 && lectoresEncontrados.length === 0 && editorialesEncontradas.length === 0 && bibliotecariosEncontrados.length === 0){
+            if(autoresEncontrados.length === 0 && librosEncontrados.length === 0 && lectoresEncontrados.length === 0 && editorialesEncontradas.length === 0 && bibliotecariosEncontrados.length === 0 && multasEncontradas.length === 0){
                 resultados.innerHTML = `
                                         <div style="padding: 12px; text-align: center; color: #666;">No se encontraron coincidencias para "${texto}"</div>
                                         `;
@@ -339,6 +356,15 @@ function initBuscador(){
                 `;
             });
 
+            // Multas
+            multasEncontradas.forEach(multa => {
+                resultados.innerHTML += `
+                    <div class="resultado-item" data-tipo="multa" data-id="${multa.id_multa}" style="padding: 10px 15px; border-bottom: 1px solid #eee; cursor: pointer;">
+                        <strong> Multa #${multa.id_multa}:</strong> Préstamo #${multa.id_prestamo} - $${multa.monto} <span style="font-size: 0.85em; color: #666;">(${multa.estado})</span>
+                    </div>
+                `;
+            });
+
             resultados.style.display = 'block';
 
         });
@@ -360,6 +386,9 @@ function initBuscador(){
                     const inputLibro = document.getElementById('libro-isbn');
                     if (inputLibro) inputLibro.value = id;
                 }
+            } else if (vistaActual === 'multas' && tipo === 'multa') {
+                const btnEditar = document.querySelector(`.editar[data-id="${id}"]`);
+                if (btnEditar) btnEditar.click();
             } else if (vistaActual === 'lectores' && tipo === 'lector') {
                 const btnEditar = document.querySelector(`.editar[data-id="${id}"]`);
                 if (btnEditar) btnEditar.click();
