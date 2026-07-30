@@ -120,6 +120,19 @@ const Autores = (() => {
         tablaBody.querySelectorAll('.borrar').forEach((btn) =>
             btn.addEventListener('click', () => borrarAutor(Number(btn.dataset.id)))
         );
+
+        const notaPendiente = sessionStorage.getItem('bookflow_redireccion_buscador');
+        if (notaPendiente) {
+            const nota = JSON.parse(notaPendiente);
+            if (nota.modulo === 'autores') { 
+                const btnSeleccionado = document.querySelector(`.editar[data-id="${nota.id}"]`); 
+                if (btnSeleccionado) {
+                    btnSeleccionado.click(); 
+                    sessionStorage.removeItem('bookflow_redireccion_buscador');
+                }
+            }
+        }
+
     } // end render tabla
 
     async function guardarAutor(e) {

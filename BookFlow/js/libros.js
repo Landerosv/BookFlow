@@ -190,6 +190,19 @@
         tablaBody.querySelectorAll('.borrar').forEach((btn) =>
             btn.addEventListener('click', () => borrarLibro(btn.dataset.isbn))
         );
+
+        const notaPendiente = sessionStorage.getItem('bookflow_redireccion_buscador');
+        if (notaPendiente) {
+            const nota = JSON.parse(notaPendiente);
+            if (nota.modulo === 'libros') { 
+                const btnSeleccionado = document.querySelector(`.editar[data-isbn="${nota.id}"]`); 
+                if (btnSeleccionado) {
+                    btnSeleccionado.click(); 
+                    sessionStorage.removeItem('bookflow_redireccion_buscador');
+                }
+            }
+        }
+
     } ///end render tabla
  
     async function guardarLibro(e) {  

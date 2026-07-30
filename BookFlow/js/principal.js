@@ -377,6 +377,21 @@ function initBuscador(){
             const vistaActual = location.hash.replace('#', '') || 'dashboard';
             const tipo = item.getAttribute('data-tipo');
             const id = item.getAttribute('data-id');
+
+            if (vistaActual === 'dashboard') {
+                let moduloDestino = '';
+                
+                if (tipo === 'libro') moduloDestino = 'libros';
+                else if (tipo === 'lector') moduloDestino = 'lectores';
+                else if (tipo === 'autor') moduloDestino = 'autores';
+
+                if (moduloDestino) {
+                    const nota = { modulo: moduloDestino, id: id };
+                    sessionStorage.setItem('bookflow_redireccion_buscador', JSON.stringify(nota));
+                    location.hash = '#' + moduloDestino; 
+                }
+            }
+            else{
             
             if (vistaActual === 'prestamos') {
                 if (tipo === 'lector') {
@@ -405,6 +420,7 @@ function initBuscador(){
                 const btnEditar = document.querySelector(`.editar[data-id="${id}"]`);
                 if (btnEditar) btnEditar.click();
             }
+        }
 
             buscador.value = '';
             resultados.innerHTML = '';

@@ -118,6 +118,19 @@ const Lectores = (() => {
         tablaBody.querySelectorAll('.borrar').forEach((btn) =>
             btn.addEventListener('click', () => borrarLector(btn.dataset.id))
         );
+
+        const notaPendiente = sessionStorage.getItem('bookflow_redireccion_buscador');
+        if (notaPendiente) {
+            const nota = JSON.parse(notaPendiente);
+            if (nota.modulo === 'lectores') { 
+                const btnSeleccionado = document.querySelector(`.editar[data-id="${nota.id}"]`); 
+                if (btnSeleccionado) {
+                    btnSeleccionado.click(); 
+                    sessionStorage.removeItem('bookflow_redireccion_buscador');
+                }
+            }
+        }
+
     } // end render tabla
 
     async function guardarLector(e) {
