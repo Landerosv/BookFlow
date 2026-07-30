@@ -30,14 +30,12 @@ const prestamos = (() => {
 
         estadoMensaje.textContent = texto;
         contenedorAlerta.style.display = 'flex';
-
         contenedorAlerta.classList.remove('alerta-error', 'alerta-exito');
 
         if (esError) {
             contenedorAlerta.classList.add('alerta-error');
         } else {
             contenedorAlerta.classList.add('alerta-exito');
-            
             setTimeout(() => {
                 contenedorAlerta.style.display = 'none';
             }, 3000);
@@ -220,7 +218,6 @@ function renderTabla() {
             }
 
             if (!errorSupabase && generarMulta) {
-                // Obtenemos el ID del préstamo actual de forma segura
                 const idParaMulta = prestamoIdGenerado || document.getElementById('prestamo-id').value;
 
                 const { error: errorMulta } = await sp
@@ -229,7 +226,7 @@ function renderTabla() {
                         id_prestamo: idParaMulta,
                         monto: montoMulta,
                         fecha_generada: fechaHoy,
-                        estado: 'Pendiente' // <-- Corregido al nombre real de tu columna
+                        estado: 'Pendiente'
                     }]);
                 
                 if (errorMulta) {
@@ -242,7 +239,7 @@ function renderTabla() {
                 mostrarMensaje(idEnEdicion ? 'Préstamo actualizado correctamente.' : 'Préstamo registrado.', false);
             }
  
-            cancelarEdicionPrestamo(); 
+            cancelarEdicionPrestamo(false); 
             cargarPrestamos();         
 
         } catch (err) {
@@ -287,7 +284,7 @@ function renderTabla() {
         formPrestamo.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-function cancelarEdicionPrestamo() {
+function cancelarEdicionPrestamo(ocultarAlerta = true) {
         btnCancelarPrestamo.disabled = true; 
         
         const usuarioInput = document.getElementById("usuario-id"); 
@@ -311,8 +308,11 @@ function cancelarEdicionPrestamo() {
 
         document.getElementById('prestamo-id').value = '';
 
-        document.getElementById('estado-devolucion').value = 'Selecciona un estado';
-        mostrarMensaje('', false); 
+        document.getElementById('estado-devolucion').value = 'Pendiente';
+        
+        if (ocultarAlerta !== false) {
+            mostrarMensaje('', false); 
+        }
     }
 
     return { init };
