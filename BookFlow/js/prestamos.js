@@ -127,7 +127,7 @@ function renderTabla() {
         );
     }
 
- async function guardarPrestamo(e) {  
+async function guardarPrestamo(e) {  
         e.preventDefault(); 
 
         const idLector = document.getElementById('usuario-id').value.trim();
@@ -162,6 +162,7 @@ function renderTabla() {
             return;
         }
 
+
         if (!idEnEdicion) { 
             try {
                 const { data: historialPrestamos } = await sp
@@ -172,7 +173,6 @@ function renderTabla() {
                 if (historialPrestamos && historialPrestamos.length > 0) {
                     const idsDePrestamos = historialPrestamos.map(p => p.id);
                     
-                    // Se revisan las multas sin pagar
                     const { data: multasPendientes } = await sp
                         .from('multas')
                         .select('id_multa')
@@ -181,13 +181,34 @@ function renderTabla() {
 
                     if (multasPendientes && multasPendientes.length > 0) {
                         mostrarMensaje('Operación denegada: El lector tiene multas pendientes de pago.', true);
-                        return; // Se detiene si hay una
+                        return; 
                     }
                 }
             } catch (error) {
                 console.error("Error al validar historial de multas:", error);
             }
         }
+
+        let stockDisponible = 0;
+        if (!idEnEdicion) { 
+            const { data: libroData, error: errorLibro } = await sp
+                .from('libros')
+                .select('stock')
+                .eq('isbn', isbn)
+                .single();
+
+            if (errorLibro || !libroData) {
+                mostrarMensaje('Error: No se pudo verificar el stock o el ISBN no existe.', true);
+                return;
+            }
+
+            if (libroData.stock < 1) {
+                mostrarMensaje('Operación denegada: No hay ejemplares disponibles de este libro en stock.', true);
+                return;
+            }
+            stockDisponible = libroData.stock; 
+        }
+
 
         let generarMulta = false;
         let montoMulta = 0;
@@ -243,6 +264,19 @@ function renderTabla() {
                 }
                 return;
             }
+
+
+            if (!idEnEdicion && estadoDevolucion === 'En curso') {
+
+                await sp.from('libros').update({ stock: stockDisponible - 1 }).eq('isbn', isbn);
+            } else if (idEnEdicion && estadoDevolucion === 'Devuelto') {
+
+                const { data: libroUpdate } = await sp.from('libros').select('stock').eq('isbn', isbn).single();
+                if (libroUpdate) {
+                    await sp.from('libros').update({ stock: libroUpdate.stock + 1 }).eq('isbn', isbn);
+                }
+            }
+
 
             if (!errorSupabase && generarMulta) {
                 const idParaMulta = prestamoIdGenerado || document.getElementById('prestamo-id').value;
