@@ -127,7 +127,7 @@ function renderTabla() {
         );
     }
 
-    async function guardarPrestamo(e) {  
+ async function guardarPrestamo(e) {  
         e.preventDefault(); 
 
         const idLector = document.getElementById('usuario-id').value.trim();
@@ -160,6 +160,33 @@ function renderTabla() {
         if (fechaDevolucion < fechaPrestamo) {
             mostrarMensaje('La fecha de devolución no puede ser anterior a la de préstamo.', true);
             return;
+        }
+
+        if (!idEnEdicion) { 
+            try {
+                const { data: historialPrestamos } = await sp
+                    .from('prestamos')
+                    .select('id')
+                    .eq('id_lector', idLector);
+
+                if (historialPrestamos && historialPrestamos.length > 0) {
+                    const idsDePrestamos = historialPrestamos.map(p => p.id);
+                    
+                    // Se revisan las multas sin pagar
+                    const { data: multasPendientes } = await sp
+                        .from('multas')
+                        .select('id_multa')
+                        .in('id_prestamo', idsDePrestamos)
+                        .eq('estado', 'Pendiente');
+
+                    if (multasPendientes && multasPendientes.length > 0) {
+                        mostrarMensaje('Operación denegada: El lector tiene multas pendientes de pago.', true);
+                        return; // Se detiene si hay una
+                    }
+                }
+            } catch (error) {
+                console.error("Error al validar historial de multas:", error);
+            }
         }
 
         let generarMulta = false;
@@ -248,7 +275,6 @@ function renderTabla() {
             btnSubmitPrestamo.disabled = false; 
         }
     }
-
 
     function cargarPrestamoEnFormulario(id) {
         const prestamo = listaPrestamos.find((p) => String(p.id) === String(id));
