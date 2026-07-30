@@ -1,6 +1,6 @@
 <section class="panel panel-form">
     <div class="panel-header">
-        <h2>Agregar / Editar lector</h2>
+        <h2>Agregar o Editar Lector</h2>
         <div class="panel-actions">
             <button type="button" id="cancelar-edicion-lector" class="btn-secondary" disabled>Cancelar edición</button>
             <button type="submit" form="form-lector" class="btn-primary">
@@ -10,7 +10,7 @@
         </div>
     </div>
 
-    <form id="form-lector" class="form-crud p-libros" autocomplete="off">
+    <form id="form-lector" class="form-crud" autocomplete="off">
         <input type="hidden" id="lector-id" name="id">
 
         <div class="field field-nombre">
@@ -29,7 +29,17 @@
 
 <section class="panel panel-loans">
     <div class="panel-header">
-        <h2>Catálogo de lectores</h2>
+        <h2>Catálogo de Lectores</h2>
+        <div class="select-wrapper">
+            <select>
+                <option value="">Ordenar por</option>
+                <option value="id-asc">Id (Mayor a menor)</option>
+                <option value="id-desc">Id (Menor a mayor)</option>
+                <option value="nombre-asc">Nombre (Ascendente)</option>
+                <option value="nombre-desc">Nombre (Descendente)</option>
+            </select>
+            <i data-lucide="chevron-down" class="select-icon"></i>
+        </div>
     </div>
 
     <div class="table-scroll">
@@ -43,6 +53,36 @@
                 </tr>
             </thead>
             <tbody id="tabla-lectores-body">
+                <tr class="skeleton-row">
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span></span></td>
+                </tr>
+                <tr class="skeleton-row">
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span></span></td>
+                </tr>
+                <tr class="skeleton-row">
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span></span></td>
+                </tr>
+                <tr class="skeleton-row">
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span></span></td>
+                </tr>
+                <tr class="skeleton-row">
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span></span></td>
+                </tr>
             </tbody>
         </table>
     </div>

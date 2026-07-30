@@ -1,7 +1,7 @@
 <!-- Formulario de registro / edición de libro -->
 <section class="panel panel-form">
     <div class="panel-header">
-        <h2>Agregar / Editar libro</h2>
+        <h2>Agregar o Editar Libro</h2>
         <div class="panel-actions">
             <button type="button" id="cancelar-edicion" class="btn-secondary" disabled>Cancelar edición</button>
             <button type="submit" form="form-libro" class="btn-primary">
@@ -29,31 +29,38 @@
                 <select id="autor" name="autor" required>
                     <option value="">Selecciona un autor</option>
                 </select>
-
                 <i data-lucide="chevron-down" class="select-icon"></i>
             </div>
         </div>
 
         <div class="field field-genero">
             <label for="genero">Género</label>
-            <select id="genero" name="genero" required>
-                <option value="">Selecciona un género</option>
-                <option value="Novela">Novela</option>
-                <option value="Ciencia ficción">Ciencia ficción</option>
-                <option value="Romance">Romance</option>
-                <option value="Terror">Terror</option>
-                <option value="Historia">Historia</option>
-                <option value="Fantasía">Fantasía</option>
-                <option value="Drama">Drama</option>
-                <option value="Infantil">Infantil</option>
-            </select>
+
+            <div class="select-wrapper">
+                <select id="genero" name="genero" required>
+                    <option value="">Selecciona un género</option>
+                    <option value="Novela">Novela</option>
+                    <option value="Ciencia ficción">Ciencia ficción</option>
+                    <option value="Romance">Romance</option>
+                    <option value="Terror">Terror</option>
+                    <option value="Historia">Historia</option>
+                    <option value="Fantasía">Fantasía</option>
+                    <option value="Drama">Drama</option>
+                    <option value="Infantil">Infantil</option>
+                </select>
+                <i data-lucide="chevron-down" class="select-icon"></i>
+            </div>
         </div>
 
         <div class="field field-editorial">
             <label for="editorial">Editorial</label>
-            <select id="editorial" name="editorial" required>
-                <option value="">Selecciona una editorial</option>
-            </select>
+
+            <div class="select-wrapper">
+                <select id="editorial" name="editorial" required>
+                    <option value="">Selecciona una editorial</option>
+                </select>
+                <i data-lucide="chevron-down" class="select-icon"></i>
+            </div>
         </div>
 
         <div class="field field-stock">
@@ -68,7 +75,20 @@
 <!-- Catálogo de libros -->
 <section class="panel panel-loans">
     <div class="panel-header">
-        <h2>Catálogo de libros</h2>
+        <h2>Catálogo de Libros</h2>
+        <div class="select-wrapper">
+            <select>
+                <option value="">Ordenar por</option>
+                
+                <option value="nombre-asc">Nombre (Ascendente)</option>
+                <option value="nombre-desc">Nombre (Descendente)</option>
+                <option value="stock-asc">Stock (Mayor a menor)</option>
+                <option value="stock-desc">Stock (Menor a mayor)</option>
+                <option value="autor-asc">Autor (Ascendente)</option>
+                <option value="autor-desc">Autor (Descendente)</option>
+            </select>
+            <i data-lucide="chevron-down" class="select-icon"></i>
+        </div>
     </div>
 
     <div class="table-scroll">

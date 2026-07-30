@@ -11,7 +11,7 @@
         </div>
     </div>
 
-    <form class="form-crud f-biblio" autocomplete="off">
+    <form class="form-crud" autocomplete="off">
         <div class="field">
             <label>Nombre</label>
             <input type="text" required>
@@ -39,7 +39,17 @@
 <!-- Catálogo de bibliotecarios -->
 <section class="panel panel-loans">
     <div class="panel-header">
-        <h2>Bibliotecarios</h2>
+        <h2>Catálogo de Bibliotecarios</h2>
+        <div class="select-wrapper">
+            <select>
+                <option value="">Ordenar por</option>
+                <option value="nombre-asc">Nombre (Ascendente)</option>
+                <option value="nombre-desc">Nombre (Descendente)</option>
+                <option value="usuario-asc">Usuario (Ascendente)</option>
+                <option value="usuario-desc">Usuario (Descendente)</option>
+            </select>
+            <i data-lucide="chevron-down" class="select-icon"></i>
+        </div>
     </div>
 
     <div class="table-scroll">
