@@ -126,8 +126,8 @@ function renderTabla() {
         const dia = String(fechaActual.getDate()).padStart(2, '0');
         const fechaHoy = `${año}-${mes}-${dia}`;
 
-        if (estadoDevolucion === 'Devuelto' && fechaDevolucion !== fechaHoy) {
-            mostrarMensaje('Para marcarlo como devuelto, la fecha de devolución debe ser el día de hoy.', true);
+        if (estadoDevolucion === 'Devuelto' && fechaHoy < fechaDevolucion) {
+            mostrarMensaje('No puedes marcar como devuelto un libro antes de su fecha límite.', true);
             return;
         }
 
