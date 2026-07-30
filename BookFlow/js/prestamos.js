@@ -1,6 +1,6 @@
 const prestamos = (() => {
     let formPrestamo, btnSubmitPrestamo, btnCancelarPrestamo;
-    let tablaBody, estadoMensaje, contenedorAlerta;
+    let tablaBody, estadoMensaje, contenedorAlerta, selectOrden;
     let listaPrestamos = [];
     let idEnEdicion = null;
 
@@ -12,11 +12,11 @@ const prestamos = (() => {
         formPrestamo = document.getElementById('form-prestamo');
         btnSubmitPrestamo = document.querySelector('button[form="form-prestamo"]');
         btnCancelarPrestamo = document.getElementById('cancelar-edicion-prestamo');
+        selectOrden = document.getElementById('orden-prestamos');
         idEnEdicion = null;
-
         btnCancelarPrestamo.addEventListener("click", cancelarEdicionPrestamo);
         formPrestamo.addEventListener('submit', guardarPrestamo);
-
+        if (selectOrden) selectOrden.addEventListener('change', renderTabla);
         await cargarPrestamos();
     } 
 
@@ -50,6 +50,24 @@ const prestamos = (() => {
         }[c]));
     }
 
+    function ordenarPrestamos(lista) {
+    const criterio = selectOrden ? selectOrden.value : '';
+    const copia = [...lista];
+
+    switch (criterio) {
+        case 'id-asc':
+            return copia.sort((a, b) => a.id - b.id);
+        case 'id-desc':
+            return copia.sort((a, b) => b.id - a.id);
+        case 'fecha-prestamo':
+            return copia.sort((a, b) => new Date(b.fecha_prestamo) - new Date(a.fecha_prestamo));
+        case 'fecha-devolucion':
+            return copia.sort((a, b) => new Date(b.fecha_devolucion) - new Date(a.fecha_devolucion));
+        default:
+            return copia;
+    }
+    } // end ordenar préstamos según el select
+
     async function cargarPrestamos() {
         try {
             const { data, error } = await sp
@@ -74,8 +92,8 @@ function renderTabla() {
 
         const fechaActual = new Date();
         const hoy = `${fechaActual.getFullYear()}-${String(fechaActual.getMonth() + 1).padStart(2, '0')}-${String(fechaActual.getDate()).padStart(2, '0')}`;
-
-        listaPrestamos.forEach((prestamo) => {
+        const listaOrdenada = ordenarPrestamos(listaPrestamos);
+        listaOrdenada.forEach((prestamo) => {
             const fila = document.createElement('tr');
 
             let estadoVisual = escapeHTML(prestamo.estado);

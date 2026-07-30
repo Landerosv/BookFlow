@@ -1,6 +1,6 @@
 const multas = (() => {
     let tablaBody, estadoMensaje;
-    let formMulta, btnSubmitMulta, btnCancelarMulta;
+    let formMulta, btnSubmitMulta, btnCancelarMulta, selectOrden;
     let listaMultas = [];
     let idEnEdicion = null;
 
@@ -11,12 +11,11 @@ const multas = (() => {
         formMulta = document.getElementById('form-multa');
         btnSubmitMulta = document.querySelector('button[form="form-multa"]');
         btnCancelarMulta = document.getElementById('cancelar-edicion-multa');
-        
+        selectOrden = document.getElementById('orden-multas');
         idEnEdicion = null;
-
         formMulta.addEventListener('submit', guardarMulta);
         btnCancelarMulta.addEventListener("click", cancelarEdicionMulta);
-
+        if (selectOrden) selectOrden.addEventListener('change', renderTabla);
         await cargarMultas();
     }
 
@@ -25,6 +24,26 @@ const multas = (() => {
             '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
         }[c]));
     }
+
+    function ordenarMultas(lista) {
+    const criterio = selectOrden ? selectOrden.value : '';
+    const copia = [...lista];
+
+    switch (criterio) {
+        case 'id-asc':
+            return copia.sort((a, b) => a.id_multa - b.id_multa);
+        case 'id-desc':
+            return copia.sort((a, b) => b.id_multa - a.id_multa);
+        case 'monto-asc':
+            return copia.sort((a, b) => a.monto - b.monto);
+        case 'monto-desc':
+            return copia.sort((a, b) => b.monto - a.monto);
+        case 'fecha':
+            return copia.sort((a, b) => new Date(b.fecha_generada) - new Date(a.fecha_generada));
+        default:
+            return copia;
+    }
+    } // end ordenar multas según el select
 
     async function cargarMultas() {
         try {
@@ -49,8 +68,8 @@ const multas = (() => {
     function renderTabla() {
         if (!tablaBody) return;
         tablaBody.innerHTML = '';
-
-        listaMultas.forEach((multa) => {
+        const listaOrdenada = ordenarMultas(listaMultas);
+        listaOrdenada.forEach((multa) => {
             const fila = document.createElement('tr');
             
 
