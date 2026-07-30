@@ -52,7 +52,7 @@ const vistas = {
     configuracion: {
         titulo: "Configuración",
         placeholder: null,
-        init: null
+        init: () => Configuracion.init()
     },
 
     bibliotecarios: {
@@ -70,6 +70,16 @@ document.addEventListener("DOMContentLoaded", async ()=>{
 
     const vistaInicial = location.hash.replace('#', '') || 'dashboard';
     await cargarVista(vistaInicial);
+
+    document.getElementById('btnLogout').addEventListener('click', async (e) => {
+        e.preventDefault(); // para que no dispare el hashchange
+        const { error } = await sp.auth.signOut();
+        if (error) {
+            console.error('Error al cerrar sesión:', error);
+            return;
+        }
+        window.location.href = "index.html";
+    });
 });
 
 window.addEventListener('hashchange', () => {
