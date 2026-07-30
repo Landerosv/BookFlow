@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+    <!-- Fondo: mismo tono que el sidebar -->
+    <rect x="0" y="0" width="64" height="64" rx="14" fill="#4F2F37"/>
+
+    <!-- Tapa trasera del libro -->
+    <rect x="17" y="12" width="30" height="40" rx="5" fill="#AFA660"/>
+
+    <!-- Páginas (asoman a la derecha) -->
+    <rect x="37" y="13" width="8" height="38" rx="3" fill="#F4EFE4"/>
+
+    <!-- Tapa frontal: mismo color, cubre la mayoría, deja ver el filo de las páginas -->
+    <rect x="17" y="12" width="25.5" height="40" rx="5" fill="#AFA660"/>
+</svg>
