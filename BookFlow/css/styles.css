@@ -1245,3 +1245,53 @@ a {
     line-height: 1;
     margin-bottom: 0.3rem;
 }
+
+
+/* =========================================================
+   Estilo del password en configuracion 
+   ========================================================= */
+.password-meter {
+    margin-top: 10px;
+    font-size: 0.85rem;
+}
+
+.password-meter .bars {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 6px;
+}
+
+.password-meter .bar {
+    height: 5px;
+    flex: 1;
+    background-color: #e5e7eb; 
+    border-radius: 3px;
+    transition: background-color 0.3s ease;
+}
+
+.password-meter .meter-text {
+    margin: 0 0 6px 0;
+    font-weight: 600;
+}
+
+.password-rules {
+    margin: 0;
+    padding-left: 18px;
+    color: #6b7280; 
+}
+
+.password-rules li {
+    margin-bottom: 3px;
+    transition: color 0.3s ease;
+}
+
+
+.regla-cumplida {
+    color: #10b981 !important; 
+    text-decoration: line-through;
+}
+
+.bar.muy-baja { background-color: #ef4444; } 
+.bar.baja { background-color: #f97316; } 
+.bar.media { background-color: #eab308; } 
+.bar.alta { background-color: #10b981; } 

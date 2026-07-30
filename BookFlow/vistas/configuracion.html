@@ -53,9 +53,26 @@
             <input type="password" id="password-actual" name="password_actual" required>
         </div>
 
-        <div class="field">
+<div class="field" style="display: flex; flex-direction: column; align-items: flex-start;">
             <label for="password-nueva">Nueva contraseña</label>
-            <input type="password" id="password-nueva" name="password_nueva" required minlength="8">
+            <input type="password" id="password-nueva" name="password_nueva" required minlength="8" maxlength="16" autocomplete="new-password" style="width: 100%;">
+            
+            <!-- Medidor de seguridad -->
+            <div class="password-meter" id="medidor-password" style="width: 100%;">
+                <div class="bars">
+                    <span class="bar" id="bar-1"></span>
+                    <span class="bar" id="bar-2"></span>
+                    <span class="bar" id="bar-3"></span>
+                    <span class="bar" id="bar-4"></span>
+                </div>
+                <p class="meter-text">Seguridad: <span id="nivel-seguridad" style="color: #666;">Nula</span></p>
+                <ul class="password-rules">
+                    <li id="regla-length">Entre 8 y 16 caracteres</li>
+                    <li id="regla-upper">Al menos una letra mayúscula</li>
+                    <li id="regla-number">Al menos un número</li>
+                    <li id="regla-special">Al menos un símbolo especial</li>
+                </ul>
+            </div>
         </div>
 
         <div class="field">
