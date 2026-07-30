@@ -1,0 +1,231 @@
+const prestamos = (() => {
+    let formPrestamo, btnSubmitPrestamo, btnCancelarPrestamo;
+    let tablaBody, estadoMensaje;
+    let listaPrestamos = [];
+    let idEnEdicion = null;
+
+
+    async function init() {
+        tablaBody = document.getElementById('tabla-prestamos-body');
+        estadoMensaje = document.getElementById('estado-mensaje-prestamo');
+        formPrestamo = document.getElementById('form-prestamo');
+        btnSubmitPrestamo = document.querySelector('button[form="form-prestamo"]');
+        btnCancelarPrestamo = document.getElementById('cancelar-edicion-prestamo');
+        idEnEdicion = null;
+
+        btnCancelarPrestamo.addEventListener("click", cancelarEdicionPrestamo);
+        formPrestamo.addEventListener('submit', guardarPrestamo);
+
+        await cargarPrestamos();
+    } 
+
+    function mostrarMensaje(texto, esError) {
+        if (!estadoMensaje) return;
+        estadoMensaje.textContent = texto;
+        estadoMensaje.classList.remove('ok', 'error');
+        estadoMensaje.classList.add(esError ? 'error' : 'ok');
+    }
+
+    function escapeHTML(texto) {
+        return String(texto ?? '').replace(/[&<>"']/g, (c) => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        }[c]));
+    }
+
+    async function cargarPrestamos() {
+        try {
+            const { data, error } = await sp
+                .from('prestamos')
+                .select('*')
+                .order('fecha_prestamo', { ascending: false });
+
+            if (error) {
+                mostrarMensaje('Error: ' + error.message, true);
+                return;
+            }
+            listaPrestamos = data;
+            renderTabla();
+        } catch (err) {
+            mostrarMensaje('Error de conexión.', true);
+        }
+    }
+
+    function renderTabla() {
+        if (!tablaBody) return;
+        tablaBody.innerHTML = '';
+
+        listaPrestamos.forEach((prestamo) => {
+            const fila = document.createElement('tr');
+            fila.innerHTML = `
+                <td>${escapeHTML(prestamo.id)}</td>
+                <td>${escapeHTML(prestamo.id_lector)}</td>
+                <td>${escapeHTML(prestamo.isbn)}</td>
+                <td>${escapeHTML(prestamo.fecha_prestamo)}</td>
+                <td>${escapeHTML(prestamo.fecha_devolucion)}</td>
+                <td>${escapeHTML(prestamo.estado)}</td>
+                <td class="acciones-cell">
+                    ${prestamo.estado === 'Devuelto' 
+                        ? `<button type="button" class="icon-btn" disabled style="opacity: 0.5; cursor: not-allowed;" title="Préstamo finalizado">
+                                <i data-lucide="square-pen"></i>
+                           </button>`
+                        : `<button type="button" class="icon-btn editar" data-id="${prestamo.id}" title="Editar">
+                                <i data-lucide="square-pen"></i>
+                           </button>`
+                    }
+                </td>
+            `;
+            tablaBody.appendChild(fila);
+        });
+
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+
+        tablaBody.querySelectorAll('.editar').forEach((btn) =>
+            btn.addEventListener('click', () => cargarPrestamoEnFormulario(btn.dataset.id))
+        );
+    } 
+
+    async function guardarPrestamo(e) {  
+        e.preventDefault(); 
+
+        const idLector = document.getElementById('usuario-id').value.trim();
+        const isbn = document.getElementById('libro-isbn').value.trim();
+        const fechaPrestamo = document.getElementById('fecha-prestamo').value;
+        const fechaDevolucion = document.getElementById('fecha-devolucion').value;
+        const estadoDevolucion = document.getElementById('estado-devolucion').value;
+        const fechaActual = new Date();
+        const año = fechaActual.getFullYear();
+        const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
+        const dia = String(fechaActual.getDate()).padStart(2, '0');
+        const fechaHoy = `${año}-${mes}-${dia}`;
+
+        if (estadoDevolucion === 'Devuelto' && fechaDevolucion !== fechaHoy) {
+            mostrarMensaje('Para marcarlo como devuelto, la fecha de devolución debe ser el día de hoy.', true);
+            return;
+        }
+
+        if (!idLector || !isbn || !fechaPrestamo || !fechaDevolucion || !estadoDevolucion) {
+            mostrarMensaje('Todos los campos son obligatorios. Por favor, llénalos todos.', true);
+            return;
+        }
+
+        if (!idEnEdicion && fechaPrestamo < fechaHoy) {
+            mostrarMensaje('La fecha de préstamo no puede ser anterior al día de hoy.', true);
+            return;
+        }
+
+        if (fechaDevolucion < fechaPrestamo) {
+            mostrarMensaje('La fecha de devolución no puede ser anterior a la de préstamo.', true);
+            return;
+        }
+
+        btnSubmitPrestamo.disabled = true;
+    
+        try {
+            const datosPrestamo = {
+                id_lector: idLector,
+                isbn: isbn,
+                fecha_prestamo: fechaPrestamo,
+                fecha_devolucion: fechaDevolucion,
+                estado: estadoDevolucion
+            };
+
+            let errorSupabase;
+
+            if (idEnEdicion) {
+                const { error } = await sp
+                    .from('prestamos')
+                    .update(datosPrestamo)
+                    .eq('id', idEnEdicion);
+                errorSupabase = error;
+            } else {
+                const { error } = await sp
+                    .from('prestamos')
+                    .insert([datosPrestamo]);
+                errorSupabase = error;
+            }
+ 
+            if (errorSupabase) {
+                if (errorSupabase.code === '23503') {
+                    mostrarMensaje('Error: El ISBN o el Lector no existen en la base de datos.', true);
+                } else {
+                    mostrarMensaje('Error al guardar: ' + errorSupabase.message, true);
+                }
+                return;
+            }
+ 
+            mostrarMensaje(idEnEdicion ? 'Préstamo actualizado correctamente.' : 'Préstamo registrado.', false);
+            cancelarEdicionPrestamo(); 
+            cargarPrestamos();         
+
+        } catch (err) {
+            mostrarMensaje('No se pudo conectar con el servidor. Revisa tu conexión.', true);
+        } finally {
+            btnSubmitPrestamo.disabled = false; 
+        }
+    }
+
+
+    function cargarPrestamoEnFormulario(id) {
+        const prestamo = listaPrestamos.find((p) => String(p.id) === String(id));
+        if (!prestamo) return;
+
+        if (prestamo.estado === 'Devuelto') {
+            mostrarMensaje('Este préstamo ya finalizó y no puede ser modificado.', true);
+            return;
+        }
+ 
+        idEnEdicion = id;
+        btnCancelarPrestamo.disabled = false; 
+
+        document.getElementById('prestamo-id').value = prestamo.id;
+        document.getElementById('usuario-id').value = prestamo.id_lector;
+        document.getElementById('libro-isbn').value = prestamo.isbn;
+        document.getElementById('fecha-prestamo').value = prestamo.fecha_prestamo;
+        document.getElementById('fecha-devolucion').value = prestamo.fecha_devolucion;
+        document.getElementById('estado-devolucion').value = prestamo.estado;
+        
+        const usuarioInput = document.getElementById("usuario-id"); 
+        usuarioInput.disabled = true; 
+        
+        const isbnInput = document.getElementById("libro-isbn"); 
+        isbnInput.disabled = true; 
+
+        const fechaPrestamo = document.getElementById("fecha-prestamo");
+        fechaPrestamo.disabled = true;
+
+        const fechaDev = document.getElementById("fecha-devolucion");
+        fechaDev.disabled = true;
+ 
+        formPrestamo.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+function cancelarEdicionPrestamo() {
+        btnCancelarPrestamo.disabled = true; 
+        
+        const usuarioInput = document.getElementById("usuario-id"); 
+        usuarioInput.disabled = false; 
+        usuarioInput.style.cursor = "text"; 
+
+        const isbnInput = document.getElementById("libro-isbn"); 
+        isbnInput.disabled = false; 
+        isbnInput.style.cursor = "text";
+        
+        const fechaPrestamo = document.getElementById("fecha-prestamo");
+        fechaPrestamo.disabled = false;
+        fechaPrestamo.style.cursor = "text";
+
+        const fechaDev = document.getElementById("fecha-devolucion");
+        fechaDev.disabled = false;
+        fechaDev.style.cursor = "text";
+        
+        idEnEdicion = null; 
+        formPrestamo.reset(); 
+
+        document.getElementById('prestamo-id').value = '';
+
+        document.getElementById('estado-devolucion').value = 'Selecciona un estado'; 
+    }
+
+    return { init };
+
+})();
