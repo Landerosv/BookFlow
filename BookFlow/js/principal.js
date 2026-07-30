@@ -178,79 +178,118 @@ function configurarHeader(titulo, placeholder){
     }
 }
 
-//buscador megaaaaaa 
+// buscador megaaaaaa
+//PD de las 4 am, no quiero hacer mas buscadores neta, que dolor de cabeza
 function initBuscador(){
     const buscador = document.getElementById('buscador');
     const resultados = document.getElementById('resultados');
+    
     if(buscador && resultados){
+        
         buscador.addEventListener('input', async (e) => {
             const texto = e.target.value.trim();
+            const vistaActual = location.hash.replace('#', '') || 'dashboard';
 
-            if(texto===""){
+            if(texto === ""){
                 resultados.innerHTML = '';
                 resultados.style.display = 'none';
                 return;
             }
 
-            const [resLibros, resLectores, resAutores] =  await Promise.all([
-                sp.from('libros').select('nombre').ilike('nombre',`%${texto}%`),
-                sp.from('lectores').select('nombre').ilike('nombre',`%${texto}%`),
-                sp.from('autores').select('nombre').ilike('nombre',`%${texto}%`)
-            ]);
+            let autoresEncontrados = [];
+            let librosEncontrados = [];
+            let lectoresEncontrados = [];
 
-            const librosEncontrados = resLibros.data || [];
-            const lectoresEncontrados = resLectores.data || [];
-            const autoresEncontrados = resAutores.data || [];
-            
+            // Si estamos en préstamos, omitimos autores y traemos los IDs necesarios
+            if (vistaActual === 'prestamos') {
+                const [resLibros, resLectores] = await Promise.all([
+                    sp.from('libros').select('nombre, isbn').ilike('nombre', `%${texto}%`),
+                    sp.from('lectores').select('nombre, id').ilike('nombre', `%${texto}%`)
+                ]);
+                librosEncontrados = resLibros.data || [];
+                lectoresEncontrados = resLectores.data || [];
+            } else {
+                // busqueda normal del sistema
+                const [resLibros, resLectores, resAutores] = await Promise.all([
+                    sp.from('libros').select('nombre, isbn').ilike('nombre', `%${texto}%`),
+                    sp.from('lectores').select('nombre, id').ilike('nombre', `%${texto}%`),
+                    sp.from('autores').select('nombre').ilike('nombre', `%${texto}%`)
+                ]);
+                librosEncontrados = resLibros.data || [];
+                lectoresEncontrados = resLectores.data || [];
+                autoresEncontrados = resAutores.data || [];
+            }
 
             resultados.innerHTML = '';
 
-            if( autoresEncontrados.length === 0 && librosEncontrados.length === 0 && lectoresEncontrados.length === 0){
-                resultados.innerHTML = `
-                                        <div style="padding: 12px; text-align: center; color: #666;">No se encontraron coincidencias para "${texto}"</div>
-                                        `;
+            if(autoresEncontrados.length === 0 && librosEncontrados.length === 0 && lectoresEncontrados.length === 0){
+                resultados.innerHTML = `<div style="padding: 12px; text-align: center; color: #666;">No se encontraron coincidencias para "${texto}"</div>`;
                 resultados.style.display = 'block';
                 return;
             }
 
-            //Autores
             autoresEncontrados.forEach(autor => {
                 resultados.innerHTML += `
-                    <div style="padding: 10px 15px; border-bottom: 1px solid #eee; cursor: pointer;">
+                    <div class="resultado-item" style="padding: 10px 15px; border-bottom: 1px solid #eee; cursor: pointer;">
                         <strong> Autor:</strong> ${autor.nombre}
                     </div>
                 `;
             });
 
-            //Libros
             librosEncontrados.forEach(libro => {
+                // Guardamos el tipo y el isbn de forma invisible
                 resultados.innerHTML += `
-                    <div style="padding: 10px 15px; border-bottom: 1px solid #eee; cursor: pointer;">
+                    <div class="resultado-item" data-tipo="libro" data-id="${libro.isbn || ''}" style="padding: 10px 15px; border-bottom: 1px solid #eee; cursor: pointer;">
                         <strong> Libro:</strong> ${libro.nombre}
                     </div>
                 `;
             });
 
-            //lectores
             lectoresEncontrados.forEach(lector => {
+                // Guardamos el tipo y el id de forma invisible
                 resultados.innerHTML += `
-                    <div style="padding: 10px 15px; border-bottom: 1px solid #eee; cursor: pointer;">
+                    <div class="resultado-item" data-tipo="lector" data-id="${lector.id || ''}" style="padding: 10px 15px; border-bottom: 1px solid #eee; cursor: pointer;">
                         <strong> Lector:</strong> ${lector.nombre}
                     </div>
                 `;
             });
 
             resultados.style.display = 'block';
-
         });
 
-        //se oculta si se hace clic afuera del buscador jejej
+        // Autocompletado que puto dolor de cabeza
+        resultados.addEventListener('click', (e) => {
+            // Buscamos el elemento contenedor del resultado al que se le hizo clic
+            const item = e.target.closest('.resultado-item');
+            if (!item) return;
+
+            const vistaActual = location.hash.replace('#', '') || 'dashboard';
+            
+            if (vistaActual === 'prestamos') {
+                const tipo = item.getAttribute('data-tipo');
+                const id = item.getAttribute('data-id');
+
+                if (tipo === 'lector') {
+                    const inputLector = document.getElementById('usuario-id');
+                    if (inputLector) inputLector.value = id;
+                } else if (tipo === 'libro') {
+                    const inputLibro = document.getElementById('libro-isbn');
+                    if (inputLibro) inputLibro.value = id;
+                }
+            }
+
+            // Después de rellenar (o si estamos en otra vista), limpiamos y cerramos
+            buscador.value = '';
+            resultados.innerHTML = '';
+            resultados.style.display = 'none';
+        });
+
+        // Se oculta si se hace clic afuera del buscador jejej
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.buscar')) {
                 resultados.style.display = 'none';
             }
         });
-
     }
 }
 
