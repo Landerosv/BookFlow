@@ -1,6 +1,6 @@
 <section class="panel panel-form">
     <div class="panel-header">
-        <h2>Administración de multas</h2>
+        <h2>Administración de Multas</h2>
         <div class="panel-actions">
             <button type="button" id="cancelar-edicion-multa" class="btn-secondary" disabled>Cancelar edición</button>
             <button type="submit" form="form-multa" class="btn-primary">
@@ -10,20 +10,23 @@
         </div>
     </div>
 
-    <form id="form-multa" class="form-crud p-libros" autocomplete="off">
+    <form id="form-multa" class="form-crud" autocomplete="off">
         <input type="hidden" id="multa-id" name="id">
         <div class="field field-id">
-            <label for="id-multa-display">ID Multa seleccionada</label>
+            <label for="id-multa-display">Multa seleccionada</label>
             <input type="text" id="id-multa-display" disabled placeholder="Selecciona una multa de la tabla">
         </div>
 
         <div class="field field-status">
-            <label for="status-multa">Status</label>
-            <select id="status-multa" name="status" required>
-                <option value="" disabled selected>Seleccione un estado...</option>
-                <option value="Pendiente">Pendiente</option>
-                <option value="Pagada">Pagada</option>
-            </select>
+            <label for="status-multa">Estado</label>
+            <div class="select-wrapper">
+                <select id="status-multa" name="status" required>
+                    <option value="" disabled selected>Seleccione un estado...</option>
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="Pagada">Pagada</option>
+                </select>
+                <i data-lucide="chevron-down" class="select-icon"></i>
+            </div>
         </div>
     </form>
 
@@ -32,7 +35,18 @@
 
 <section class="panel panel-loans">
     <div class="panel-header">
-        <h2>Catálogo de multas</h2>
+        <h2>Catálogo de Multas</h2>
+        <div class="select-wrapper">
+            <select>
+                <option value="">Ordenar por</option>
+                <option value="id-asc">Id (Mayor a menor)</option>
+                <option value="id-desc">Id (Menor a mayor)</option>
+                <option value="nombre-asc">Monto (Ascendente)</option>
+                <option value="nombre-desc">Monto (Descendente)</option>                                
+                <option value="fecha">Fecha Generada</option>   
+            </select>
+            <i data-lucide="chevron-down" class="select-icon"></i>
+        </div>
     </div>
 
     <div class="table-scroll">
@@ -44,11 +58,56 @@
                     <th>Monto</th> 
                     <th>Fecha generada</th> 
                     <th>Fecha pagada</th> 
-                    <th>Status</th> 
+                    <th>Estado</th> 
                     <th><!-- columna de acciones --></th>
                 </tr>
             </thead>
             <tbody id="tabla-multas-body">
+                <tr class="skeleton-row">
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span></span></td>
+                </tr>
+                <tr class="skeleton-row">
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span></span></td>
+                </tr>
+                <tr class="skeleton-row">
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span></span></td>
+                </tr>
+                <tr class="skeleton-row">
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span></span></td>
+                </tr>
+                <tr class="skeleton-row">
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span></span></td>
+                </tr>
             </tbody>
         </table>
     </div>

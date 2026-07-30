@@ -432,6 +432,11 @@ a {
     display: block;
 }
 
+
+/* =========================================================
+   PRINCIPAL (DASHBOARD)
+   ========================================================= */
+
 /* ----- Estadísticas ----- */
 .stats {
     display: flex;
@@ -719,7 +724,10 @@ a {
     padding-bottom: 2.5rem;
 }
 
-/* ----- Formulario ----- */
+/* =========================================================
+   FORMULARIOS
+   ========================================================= */
+   
 .panel-form {
     flex-shrink: 0;
     padding-bottom: 0.5rem;
@@ -727,14 +735,14 @@ a {
 
 .form-crud {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-    gap: 1rem 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 1.4rem 2rem;
 }
 
 .form-crud .field {
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
+    gap: 0.5rem;
 }
 
 .form-crud label {
@@ -766,41 +774,36 @@ a {
     color: #B7A79C;
 }
 
-.field select{
-    width:100%;
-    padding: 0.55rem 0.7rem;
-    border: 1.5px solid var(--fondo-line);
-    border-radius:10px;
-    background: var(--fondo);
-    font-family: var(--font-body);
-    font-size: 0.9rem;
-    color: var(--ink);
-    outline:none;
-    transition:.2s;
-}
-
 .select-wrapper{
     position: relative;
 }
 
 .select-wrapper select{
     width:100%;
-    padding:12px 42px 12px 14px;
+    padding: 0.55rem 2.6rem 0.55rem 0.7rem;
 
-    border:1px solid var(--fondo-line);
+    border:1.5px solid var(--fondo-line);
     border-radius:10px;
 
     background:var(--fondo);
     color:var(--ink);
-
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    outline:none;  
+    
     appearance:none;
     -webkit-appearance:none;
     -moz-appearance:none;
 
-    font:var(--font-body);
     font-size: 0.9rem;
     cursor:pointer;
     transition:.2s;
+}
+
+.panel-header .select-wrapper select {
+    padding: 0.4rem 2.6rem 0.4rem 0.7rem;
+    border:2px solid var(--fondo-line);
+    background:var(--card);
 }
 
 .select-icon{
@@ -812,12 +815,6 @@ a {
     height:18px;
     color:var(--vino);
     pointer-events:none;
-}
-
-.form-crud .select-wrapper select{
-    padding: 0.55rem 2.6rem 0.55rem 0.7rem;
-    border: 1.5px solid var(--fondo-line);
-    font-size: 0.9rem;
 }
 
 /* ----- Acciones del panel-form (Cancelar edición / Guardar) ----- */
