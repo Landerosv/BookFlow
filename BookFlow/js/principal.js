@@ -50,9 +50,9 @@ const vistas = {
         init: null
     },
 
-    administradores: {
-        titulo: "Administradores",
-        placeholder: "Buscar por nombre, usuario o teléfono...",
+    configuracion: {
+        titulo: "Configuración",
+        placeholder: null,
         init: null
     },
 
@@ -138,11 +138,24 @@ function initSidebar() {
 }
 
 function configurarHeader(titulo, placeholder){
-    document.getElementById("tb-header").textContent = titulo;
-    const buscador = document.getElementById("buscador");
-    buscador.value = "";
-    buscador.placeholder = placeholder;
+    if (titulo) {
+        document.getElementById("tb-header").textContent = titulo;
+    }
 
+    const buscador = document.getElementById("buscador");
+    const contenedorBuscador = document.querySelector('.buscar');
+    const resultados = document.getElementById('resultados');
+
+    buscador.value = "";
+    resultados.innerHTML = '';
+    resultados.style.display = 'none';
+
+    if (placeholder) {
+        contenedorBuscador.classList.remove('hidden');
+        buscador.placeholder = placeholder;
+    } else {
+        contenedorBuscador.classList.add('hidden');
+    }
 }
 
 //buscador megaaaaaa 
@@ -244,7 +257,7 @@ async function cargarVista(nombreVista){
     contenedor.innerHTML = await respuesta.text();
     lucide.createIcons();
 
-    if (cfg.titulo) configurarHeader(cfg.titulo, cfg.placeholder);
+    configurarHeader(cfg.titulo, cfg.placeholder);
     if (cfg.init) await cfg.init();
 }
 
