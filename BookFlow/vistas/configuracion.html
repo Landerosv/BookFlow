@@ -1,0 +1,68 @@
+<section class="panel panel-form">
+    <div class="panel-header">
+        <h2>Mis Datos</h2>
+        <div class="panel-actions">
+            <button type="button" class="btn-secondary" id="btn-cancelar-cuenta" disabled>Cancelar edición</button>
+            <button type="submit" form="form-cuenta" class="btn-primary">
+                <i data-lucide="save"></i>
+                Guardar cambios
+            </button>
+        </div>
+    </div>
+
+    <form id="form-cuenta" class="form-crud" autocomplete="off">
+        <div class="field">
+            <label for="cuenta-nombre">Nombre</label>
+            <input type="text" id="cuenta-nombre" name="nombre" class="skeleton" required>
+        </div>
+
+        <div class="field">
+            <label for="cuenta-correo">Correo</label>
+            <input type="email" id="cuenta-correo" name="correo" class="skeleton" required>
+        </div>
+
+        <div class="field">
+            <label for="cuenta-telefono">Teléfono</label>
+            <input type="tel" id="cuenta-telefono" name="telefono" class="skeleton">
+        </div>
+
+        <div class="field">
+            <label for="cuenta-usuario">Usuario</label>
+            <input type="text" id="cuenta-usuario" name="usuario" class="skeleton" required>
+        </div>
+    </form>
+
+    <p class="estado-mensaje" id="estado-mensaje-cuenta"></p>
+</section>
+
+<!-- Cambio de contraseña -->
+<section class="panel panel-form">
+    <div class="panel-header">
+        <h2>Cambiar Contraseña</h2>
+        <div class="panel-actions">
+            <button type="submit" form="form-password" class="btn-primary">
+                <i data-lucide="lock"></i>
+                Actualizar contraseña
+            </button>
+        </div>
+    </div>
+
+    <form id="form-password" class="form-crud" autocomplete="off">
+        <div class="field">
+            <label for="password-actual">Contraseña actual</label>
+            <input type="password" id="password-actual" name="password_actual" required>
+        </div>
+
+        <div class="field">
+            <label for="password-nueva">Nueva contraseña</label>
+            <input type="password" id="password-nueva" name="password_nueva" required minlength="8">
+        </div>
+
+        <div class="field">
+            <label for="password-confirmar">Confirmar nueva contraseña</label>
+            <input type="password" id="password-confirmar" name="password_confirmar" required minlength="8">
+        </div>
+    </form>
+
+    <p class="estado-mensaje" id="estado-mensaje-password"></p>
+</section>

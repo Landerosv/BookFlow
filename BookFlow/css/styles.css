@@ -897,6 +897,21 @@ a {
     color: var(--terracota);
 }
 
+.estado-mensaje {
+    margin: 0.8rem 0 0;
+    font-size: 0.85rem;
+    font-weight: 500;
+    min-height: 1.1rem;
+}
+
+.estado-mensaje.ok {
+    color: #4F5E38;
+}
+
+.estado-mensaje.error {
+    color: var(--terracota);
+}
+
 /* ----- Acciones en tablas (editar / borrar) ----- */
 .acciones-cell {
     display: flex;
