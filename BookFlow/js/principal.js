@@ -29,7 +29,7 @@ const vistas = {
     autores: {
         titulo: "Autores",
         placeholder: "Buscar por nombre o nacionalidad...",
-        init: null
+        init: () => Autores.init()
     },
 
     editoriales: {
