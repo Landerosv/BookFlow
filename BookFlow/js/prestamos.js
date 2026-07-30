@@ -201,18 +201,22 @@ function renderTabla() {
                 return;
             }
 
-            if (!errorSupabase && generarMulta && prestamoIdGenerado) {
+            if (!errorSupabase && generarMulta) {
+                // Obtenemos el ID del préstamo actual de forma segura
+                const idParaMulta = prestamoIdGenerado || document.getElementById('prestamo-id').value;
+
                 const { error: errorMulta } = await sp
                     .from('multas')
                     .insert([{
-                        id_prestamo: prestamoIdGenerado,
+                        id_prestamo: idParaMulta,
                         monto: montoMulta,
                         fecha_generada: fechaHoy,
-                        status: 'Pendiente'
+                        estado: 'Pendiente' // <-- Corregido al nombre real de tu columna
                     }]);
                 
                 if (errorMulta) {
-                    console.error("No se pudo generar la multa:", errorMulta.message);
+                    console.error("Error al insertar multa en Supabase:", errorMulta.message);
+                    mostrarMensaje('Préstamo actualizado, pero falló la generación de la multa: ' + errorMulta.message, true);
                 } else {
                     mostrarMensaje(`Devolución registrada con retraso. Se generó una multa de $${montoMulta} pesos.`, false);
                 }
