@@ -115,15 +115,33 @@
                     <span class="date" id="fecha">Miércoles, 22 de julio 2026</span> <!--Esto con la fecha del día-->
                 </div>
 
-                <div class="tb-right">
-                    <p>
-                        <span class="tb-name" id="nombre">Luis Landeros</span>
-                        <span class="tb-rol">Administrador</span>
-                    </p>       
-                    <div class="avatar">
-                        <a href="#" class="nav-link">
-                            <i data-lucide="user-round"></i>
-                        </a>
+                <div class="tb-right user-profile-container" id="userMenuButton">
+                    
+                    <div class="user-trigger">
+                        <p>
+                            <span class="tb-name" id="nombre">Luis Landeros</span>
+                            <span class="tb-rol">Administrador</span>
+                        </p>       
+                        <div class="avatar">
+                            <span class="nav-link"> 
+                                <i data-lucide="user-round"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="dropdown-menu" id="userDropdown">
+                        <ul>
+                            <li>
+                                <a href="#configuracion">
+                                    <i data-lucide="settings" class="icon-sm"></i> Configuración
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#cerrar-sesion" id="btnLogout">
+                                    <i data-lucide="log-out" class="icon-sm"></i> Cerrar Sesión
+                                </a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
         

@@ -253,3 +253,23 @@ function marcarActivo(nombreVista){
         link.classList.toggle('active', link.dataset.vista === nombreVista);
     });
 }
+
+//para q salga el menu al darle clic al usuario y así
+document.addEventListener('DOMContentLoaded', () => {
+    const userMenuButton = document.getElementById('userMenuButton');
+    const userDropdown = document.getElementById('userDropdown');
+
+    if (userMenuButton && userDropdown) {
+        userMenuButton.addEventListener('click', (event) => {
+            userDropdown.classList.toggle('show');
+            event.stopPropagation(); 
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!userMenuButton.contains(event.target) && !userDropdown.contains(event.target)) {
+                userDropdown.classList.remove('show');
+            }
+        });
+    }
+    lucide.createIcons();
+});
