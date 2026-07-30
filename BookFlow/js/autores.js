@@ -1,6 +1,6 @@
 const Autores = (() => {
 
-    let formAutor, btnSubmit, btnCancelar, estadoMensaje, tablaBody;
+    let formAutor, btnSubmit, btnCancelar, estadoMensaje, tablaBody, selectOrder;
     let autores = [];
     let idEnEdicion = null;
 
@@ -11,9 +11,11 @@ const Autores = (() => {
         estadoMensaje = document.getElementById('estado-mensaje-autor');
         tablaBody = document.getElementById('tabla-autores-body');
 
+        selectOrden = document.getElementById('orden-autores');
         idEnEdicion = null;
         formAutor.addEventListener('submit', guardarAutor);
         btnCancelar.addEventListener('click', cancelarEdicion);
+        if (selectOrden) selectOrden.addEventListener('change', renderTabla);
 
         await cargarAutores();
     } // end init autores
@@ -38,6 +40,24 @@ const Autores = (() => {
         return texto.trim().replace(/\s+/g, ' ');
     } // end normalizar espacios repetidos
 
+    function ordenarAutores(lista) {
+        const criterio = selectOrden ? selectOrden.value : '';
+        const copia = [...lista];
+
+        switch (criterio) {
+            case 'id-asc':
+                return copia.sort((a, b) => a.id - b.id);
+            case 'id-desc':
+                return copia.sort((a, b) => b.id - a.id);
+            case 'nombre-asc':
+                return copia.sort((a, b) => a.nombre.localeCompare(b.nombre));
+            case 'nombre-desc':
+                return copia.sort((a, b) => b.nombre.localeCompare(a.nombre));
+            default:
+                return copia; // "Ordenar por" (sin selección): se queda como vino de la BD
+        }
+    } // end ordenar autores según el select
+
     async function cargarAutores() {
         try {
             const { data, error } = await sp
@@ -60,7 +80,9 @@ const Autores = (() => {
     function renderTabla() {
         tablaBody.innerHTML = '';
 
-        autores.forEach((autor) => {
+        const listaOrdenada = ordenarAutores(autores);
+
+        listaOrdenada.forEach((autor) => {
             const fila = document.createElement('tr');
             fila.innerHTML = `
                 <td>${autor.id}</td>
