@@ -3,13 +3,12 @@ const spK = 'sb_publishable_OkJX5qDnmbMmHgOMRILz8Q_1TVu0IEA';
 
 //Variables 
 const sp = window.supabase.createClient(spURL, spK);
-
+let saludoHeader = "Biblioteca Principal"; // se actualiza en inicioSesion() con el nombre real
 const vistas = {
     dashboard: {
         titulo: null,
         placeholder: null,
         init: async () => {
-            await inicioSesion();
             await cargarDashboard();
         }
     },
@@ -67,6 +66,7 @@ document.addEventListener("DOMContentLoaded", async ()=>{
     lucide.createIcons();
     initSidebar();
     initBuscador();
+    await inicioSesion();
 
     const vistaInicial = location.hash.replace('#', '') || 'dashboard';
     await cargarVista(vistaInicial);
@@ -96,7 +96,8 @@ async function inicioSesion() {
 
     if(perfil){
         const nombre = perfil.nombre.split(' ') [0];
-        document.getElementById('tb-header').textContent = `Hola, ${nombre} - Biblioteca Principal`;
+        saludoHeader = `Hola, ${nombre} - Biblioteca Principal`;
+        document.getElementById('tb-header').textContent = saludoHeader;
         document.getElementById('nombre').textContent = perfil.nombre;
     }else{
         console.error("No se pudo cargar el perfil", errorPerfil);
@@ -257,7 +258,13 @@ async function cargarVista(nombreVista){
     contenedor.innerHTML = await respuesta.text();
     lucide.createIcons();
 
-    configurarHeader(cfg.titulo, cfg.placeholder);
+
+    if (nombreVista === 'dashboard') {
+        configurarHeader(saludoHeader, "Buscar libro, lector o autor...");
+    } else if (cfg.titulo) {
+        configurarHeader(cfg.titulo, cfg.placeholder);
+    }
+
     if (cfg.init) await cfg.init();
 }
 
