@@ -1,7 +1,7 @@
 const Configuracion = (() => {
 
-    let formCuenta, btnCancelarCuenta, mensajeCuenta;
-    let formPassword, mensajePassword, btnSubmitPassword;
+    let formCuenta, btnCancelarCuenta, estadoMensajeCuenta, contenedorAlertaCuenta;
+    let formPassword, estadoMensajePassword, btnSubmitPassword, contenedorAlertaPassword;
     let correoActivo = null;
     let datosOriginales = {};
 
@@ -9,12 +9,14 @@ const Configuracion = (() => {
     
         formCuenta = document.getElementById('form-cuenta');
         btnCancelarCuenta = document.getElementById('btn-cancelar-cuenta');
-        mensajeCuenta = document.getElementById('estado-mensaje-cuenta');
+        estadoMensajeCuenta = document.getElementById('estado-mensaje-cuenta');
+        contenedorAlertaCuenta = document.getElementById('contenedor-alerta-cuenta');
 
 
         formPassword = document.getElementById('form-password');
-        mensajePassword = document.getElementById('estado-mensaje-password');
+        estadoMensajePassword = document.getElementById('estado-mensaje-password');
         btnSubmitPassword = document.querySelector('button[form="form-password"]');
+        contenedorAlertaPassword = document.getElementById('contenedor-alerta-password');
 
 
         formCuenta.addEventListener('input', () => {
@@ -30,10 +32,26 @@ const Configuracion = (() => {
         await cargarDatos();
     } // end init configuracion
 
-    function mostrarMensaje(elemento, texto, esError) {
-        elemento.textContent = texto;
-        elemento.classList.remove('ok', 'error');
-        elemento.classList.add(esError ? 'error' : 'ok');
+    function mostrarMensaje(contenedorAlerta, estadoMensaje, texto, esError) {
+        if (!estadoMensaje || !contenedorAlerta) return;
+
+        if (!texto) {
+            contenedorAlerta.style.display = 'none';
+            return;
+        }
+
+        estadoMensaje.textContent = texto;
+        contenedorAlerta.style.display = 'flex';
+        contenedorAlerta.classList.remove('alerta-error', 'alerta-exito');
+
+        if (esError) {
+            contenedorAlerta.classList.add('alerta-error');
+        } else {
+            contenedorAlerta.classList.add('alerta-exito');
+            setTimeout(() => {
+                contenedorAlerta.style.display = 'none';
+            }, 3000);
+        }
     } // end mostrar mensaje
 
     // ---------- Cargar datos del bibliotecario ----------
@@ -73,16 +91,16 @@ const Configuracion = (() => {
         });
     } // end pintar datos
 
-    function cancelarEdicionCuenta() {
+    function cancelarEdicionCuenta(ocultarAlerta = true) {
         pintarDatos(datosOriginales);
         btnCancelarCuenta.disabled = true;
-        mensajeCuenta.textContent = '';
+        mostrarMensaje(contenedorAlertaCuenta, estadoMensajeCuenta, '', false);
     } // end cancelar edicion cuenta
 
     // ---------- Form de datos de la cuenta ----------
     async function guardarCuenta(e) {
         e.preventDefault();
-        mensajeCuenta.textContent = '';
+        mostrarMensaje(contenedorAlertaCuenta, estadoMensajeCuenta, '', false);
 
         const nombre = document.getElementById('cuenta-nombre').value.trim();
         const correo = document.getElementById('cuenta-correo').value.trim();
@@ -95,7 +113,7 @@ const Configuracion = (() => {
             .eq('correo', correoActivo);
 
         if (error) {
-            mostrarMensaje(mensajeCuenta, 'No se pudieron guardar los cambios: ' + error.message, true);
+            mostrarMensaje(contenedorAlertaCuenta, estadoMensajeCuenta, 'No se pudieron guardar los cambios: ' + error.message, true);
             return;
         }
 
@@ -103,7 +121,7 @@ const Configuracion = (() => {
             const { error: errorAuth } = await sp.auth.updateUser({ email: correo });
             if (errorAuth) {
                 console.error('Error al actualizar correo en auth:', errorAuth);
-                mostrarMensaje(mensajeCuenta, 'Datos guardados, pero no se pudo actualizar el correo de acceso.', true);
+                mostrarMensaje(contenedorAlertaCuenta, estadoMensajeCuenta, 'Datos guardados, pero no se pudo actualizar el correo de acceso.', true);                
                 return;
             }
         }
@@ -112,7 +130,7 @@ const Configuracion = (() => {
         datosOriginales = { nombre, correo, telefono, usuario };
         btnCancelarCuenta.disabled = true;
 
-        mostrarMensaje(mensajeCuenta, 'Cambios guardados correctamente.', false);
+        mostrarMensaje(contenedorAlertaCuenta, estadoMensajeCuenta, 'Cambios guardados correctamente.', false);    
     } // end guardar cuenta
 
     // ---------- Form de cambio de contraseña ----------
@@ -128,7 +146,7 @@ const Configuracion = (() => {
     
     async function guardarPassword(e) {
         e.preventDefault();
-        mensajePassword.textContent = '';
+        mostrarMensaje(contenedorAlertaPassword, estadoMensajePassword, '', false);
         btnSubmitPassword.disabled = true;
 
         const passwordActual = document.getElementById('password-actual').value;
@@ -137,19 +155,19 @@ const Configuracion = (() => {
 
         const passRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,16}$/;
         if (!passRegex.test(passwordNueva)) {
-            mostrarMensaje(mensajePassword, 'La nueva contraseña debe cumplir con todos los requisitos (Seguridad Alta).', true);
+            mostrarMensaje(contenedorAlertaPassword, estadoMensajePassword, 'La nueva contraseña debe cumplir con todos los requisitos (Seguridad Alta).', true);
             btnSubmitPassword.disabled = false;
             return;
         }
 
         if (passwordNueva !== passwordConfirmar) {
-            mostrarMensaje(mensajePassword, 'Las contraseñas nuevas no coinciden.', true);
+            mostrarMensaje(contenedorAlertaPassword, estadoMensajePassword, 'Las contraseñas nuevas no coinciden.', true);
             btnSubmitPassword.disabled = false;
             return;
         }
 
         if (passwordActual === passwordNueva) {
-            mostrarMensaje(mensajePassword, 'La nueva contraseña debe ser diferente a la actual.', true);
+            mostrarMensaje(contenedorAlertaPassword, estadoMensajePassword, 'La nueva contraseña debe ser diferente a la actual.', true);
             btnSubmitPassword.disabled = false;
             return;
         }
@@ -162,7 +180,7 @@ const Configuracion = (() => {
             });
 
             if (errorAuthLocal) {
-                mostrarMensaje(mensajePassword, 'La contraseña actual es incorrecta.', true);
+                mostrarMensaje(contenedorAlertaPassword, estadoMensajePassword, 'La contraseña actual es incorrecta.', true);
                 btnSubmitPassword.disabled = false;
                 return;
             }
@@ -172,14 +190,14 @@ const Configuracion = (() => {
             });
 
             if (errorUpdate) {
-                mostrarMensaje(mensajePassword, 'Error interno al actualizar: ' + errorUpdate.message, true);
+                mostrarMensaje(contenedorAlertaPassword, estadoMensajePassword, 'Error interno al actualizar: ' + errorUpdate.message, true);
             } else {
-                mostrarMensaje(mensajePassword, '¡Contraseña actualizada de forma segura!', false);
+                mostrarMensaje(contenedorAlertaPassword, estadoMensajePassword, '¡Contraseña actualizada de forma segura!', false);
                 formPassword.reset(); 
             }
 
         } catch (err) {
-            mostrarMensaje(mensajePassword, 'Error de conexión con el servidor.', true);
+            mostrarMensaje(contenedorAlertaPassword, estadoMensajePassword, 'Error de conexión con el servidor.', true);
         } finally {
             btnSubmitPassword.disabled = false;
         }
