@@ -199,38 +199,68 @@ function initBuscador(){
             let autoresEncontrados = [];
             let librosEncontrados = [];
             let lectoresEncontrados = [];
+            let editorialesEncontradas = [];
 
             if (vistaActual === 'prestamos') {
                 const [resLibros, resLectores] = await Promise.all([
-                    sp.from('libros').select('nombre, isbn').ilike('nombre', `%${texto}%`),
-                    sp.from('lectores').select('nombre, id').ilike('nombre', `%${texto}%`)
+                    sp.from('libros').select('isbn, nombre, genero').ilike('nombre', `%${texto}%`),
+                    sp.from('lectores').select('id, nombre, telefono').ilike('nombre', `%${texto}%`)
                 ]);
                 librosEncontrados = resLibros.data || [];
                 lectoresEncontrados = resLectores.data || [];
                 
             } else if (vistaActual === 'lectores') {
-                //Busqueda en paralela de los lectores con los dos tipos de datos que pusimos en supa
                 const [resNombres, resTelefonos] = await Promise.all([
                     sp.from('lectores').select('id, nombre, telefono').ilike('nombre', `%${texto}%`),
                     sp.from('lectores').select('id, nombre, telefono').ilike('telefono', `%${texto}%`)
                 ]);
                 
-                // Unimos los resultados eliminando duplicados mediante el ID
                 const mapaLectores = new Map();
-                if (resNombres.data) {
-                    resNombres.data.forEach(l => mapaLectores.set(l.id, l));
-                }
-                if (resTelefonos.data) {
-                    resTelefonos.data.forEach(l => mapaLectores.set(l.id, l));
-                }
-                
+                if (resNombres.data) resNombres.data.forEach(l => mapaLectores.set(l.id, l));
+                if (resTelefonos.data) resTelefonos.data.forEach(l => mapaLectores.set(l.id, l));
                 lectoresEncontrados = Array.from(mapaLectores.values());
                 
+            } else if (vistaActual === 'libros') {
+                // CORRECCIÓN: Se agregó 'genero' al select 
+                const [resNombres, resIsbn] = await Promise.all([
+                    sp.from('libros').select('isbn, nombre, genero').ilike('nombre', `%${texto}%`),
+                    sp.from('libros').select('isbn, nombre, genero').ilike('isbn', `%${texto}%`)
+                ]);
+                
+                const mapaLibros = new Map();
+                if (resNombres.data) resNombres.data.forEach(l => mapaLibros.set(l.isbn, l));
+                if (resIsbn.data) resIsbn.data.forEach(l => mapaLibros.set(l.isbn, l));
+                librosEncontrados = Array.from(mapaLibros.values());
+                
+            } else if (vistaActual === 'autores') {
+                // CORRECCIÓN: Se aseguró que 'nacionalidad' venga en ambas peticiones
+                const [resNombres, resNac] = await Promise.all([
+                    sp.from('autores').select('id, nombre, nacionalidad').ilike('nombre', `%${texto}%`),
+                    sp.from('autores').select('id, nombre, nacionalidad').ilike('nacionalidad', `%${texto}%`)
+                ]);
+                
+                const mapaAutores = new Map();
+                if (resNombres.data) resNombres.data.forEach(a => mapaAutores.set(a.id, a));
+                if (resNac.data) resNac.data.forEach(a => mapaAutores.set(a.id, a));
+                autoresEncontrados = Array.from(mapaAutores.values());
+
+            } else if (vistaActual === 'editoriales') {
+                const [resNombres, resIdioma] = await Promise.all([
+                    sp.from('editorial').select('id, nombre, idioma').ilike('nombre', `%${texto}%`),
+                    sp.from('editorial').select('id, nombre, idioma').ilike('idioma', `%${texto}%`)
+                ]);
+                
+                const mapaEditoriales = new Map();
+                if (resNombres.data) resNombres.data.forEach(e => mapaEditoriales.set(e.id, e));
+                if (resIdioma.data) resIdioma.data.forEach(e => mapaEditoriales.set(e.id, e));
+                editorialesEncontradas = Array.from(mapaEditoriales.values());
+
             } else {
+                // Búsqueda global (dashboard) - Ya trae todas las columnas
                 const [resLibros, resLectores, resAutores] =  await Promise.all([
-                    sp.from('libros').select('nombre, isbn').ilike('nombre',`%${texto}%`),
-                    sp.from('lectores').select('nombre, id').ilike('nombre',`%${texto}%`),
-                    sp.from('autores').select('nombre').ilike('nombre',`%${texto}%`)
+                    sp.from('libros').select('isbn, nombre, genero').ilike('nombre',`%${texto}%`),
+                    sp.from('lectores').select('id, nombre, telefono').ilike('nombre',`%${texto}%`),
+                    sp.from('autores').select('id, nombre, nacionalidad').ilike('nombre',`%${texto}%`)
                 ]);
                 librosEncontrados = resLibros.data || [];
                 lectoresEncontrados = resLectores.data || [];
@@ -239,7 +269,7 @@ function initBuscador(){
             
             resultados.innerHTML = '';
 
-            if( autoresEncontrados.length === 0 && librosEncontrados.length === 0 && lectoresEncontrados.length === 0){
+            if( autoresEncontrados.length === 0 && librosEncontrados.length === 0 && lectoresEncontrados.length === 0 && editorialesEncontradas.length === 0){
                 resultados.innerHTML = `
                                         <div style="padding: 12px; text-align: center; color: #666;">No se encontraron coincidencias para "${texto}"</div>
                                         `;
@@ -247,27 +277,39 @@ function initBuscador(){
                 return;
             }
 
-            //Autores
+            // Autores
             autoresEncontrados.forEach(autor => {
+                const infoExtra = autor.nacionalidad ? ` <span style="font-size: 0.85em; color: #666;">(${autor.nacionalidad})</span>` : '';
                 resultados.innerHTML += `
-                    <div class="resultado-item" style="padding: 10px 15px; border-bottom: 1px solid #eee; cursor: pointer;">
-                        <strong> Autor:</strong> ${autor.nombre}
+                    <div class="resultado-item" data-tipo="autor" data-id="${autor.id || ''}" style="padding: 10px 15px; border-bottom: 1px solid #eee; cursor: pointer;">
+                        <strong> Autor:</strong> ${autor.nombre}${infoExtra}
                     </div>
                 `;
             });
 
-            //Libros
+            // Editoriales
+            editorialesEncontradas.forEach(editorial => {
+                const infoExtra = editorial.idioma ? ` <span style="font-size: 0.85em; color: #666;">(${editorial.idioma})</span>` : '';
+                resultados.innerHTML += `
+                    <div class="resultado-item" data-tipo="editorial" data-id="${editorial.id || ''}" style="padding: 10px 15px; border-bottom: 1px solid #eee; cursor: pointer;">
+                        <strong> Editorial:</strong> ${editorial.nombre}${infoExtra}
+                    </div>
+                `;
+            });
+
+            // Libros
             librosEncontrados.forEach(libro => {
+                const infoExtra = libro.genero ? ` <span style="font-size: 0.85em; color: #666;">(${libro.genero} - ISBN: ${libro.isbn})</span>` : ` <span style="font-size: 0.85em; color: #666;">(ISBN: ${libro.isbn})</span>`;
                 resultados.innerHTML += `
                     <div class="resultado-item" data-tipo="libro" data-id="${libro.isbn || ''}" style="padding: 10px 15px; border-bottom: 1px solid #eee; cursor: pointer;">
-                        <strong> Libro:</strong> ${libro.nombre}
+                        <strong> Libro:</strong> ${libro.nombre}${infoExtra}
                     </div>
                 `;
             });
 
-            //lectores
+            // Lectores
             lectoresEncontrados.forEach(lector => {
-                const infoExtra = vistaActual === 'lectores' ? ` <span style="font-size: 0.85em; color: #666;">(${lector.telefono})</span>` : '';
+                const infoExtra = lector.telefono ? ` <span style="font-size: 0.85em; color: #666;">(${lector.telefono})</span>` : '';
                 resultados.innerHTML += `
                     <div class="resultado-item" data-tipo="lector" data-id="${lector.id || ''}" style="padding: 10px 15px; border-bottom: 1px solid #eee; cursor: pointer;">
                         <strong> Lector:</strong> ${lector.nombre}${infoExtra}
@@ -298,11 +340,16 @@ function initBuscador(){
                 }
             } else if (vistaActual === 'lectores' && tipo === 'lector') {
                 const btnEditar = document.querySelector(`.editar[data-id="${id}"]`);
-                if (btnEditar) {
-                    btnEditar.click();
-                } else {
-                    console.warn('El botón de editar para este lector no se encontró en la tabla.');
-                }
+                if (btnEditar) btnEditar.click();
+            } else if (vistaActual === 'autores' && tipo === 'autor') {
+                const btnEditar = document.querySelector(`.editar[data-id="${id}"]`);
+                if (btnEditar) btnEditar.click();
+            } else if (vistaActual === 'editoriales' && tipo === 'editorial') {
+                const btnEditar = document.querySelector(`.editar[data-id="${id}"]`);
+                if (btnEditar) btnEditar.click();
+            } else if (vistaActual === 'libros' && tipo === 'libro') {
+                const btnEditar = document.querySelector(`.editar[data-isbn="${id}"]`);
+                if (btnEditar) btnEditar.click();
             }
 
             buscador.value = '';
@@ -319,7 +366,6 @@ function initBuscador(){
 
     }
 }
-
 async function cargarVista(nombreVista){
     const cfg = vistas[nombreVista];
     marcarActivo(nombreVista);
