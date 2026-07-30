@@ -1,5 +1,5 @@
 const multas = (() => {
-    let tablaBody, estadoMensaje;
+    let tablaBody, estadoMensaje, contenedorAlerta;
     let formMulta, btnSubmitMulta, btnCancelarMulta;
     let listaMultas = [];
     let idEnEdicion = null;
@@ -7,6 +7,7 @@ const multas = (() => {
     async function init() {
         tablaBody = document.getElementById('tabla-multas-body');
         estadoMensaje = document.getElementById('estado-mensaje-multa');
+        contenedorAlerta = document.getElementById('contenedor-alerta-multa')
         
         formMulta = document.getElementById('form-multa');
         btnSubmitMulta = document.querySelector('button[form="form-multa"]');
@@ -18,6 +19,29 @@ const multas = (() => {
         btnCancelarMulta.addEventListener("click", cancelarEdicionMulta);
 
         await cargarMultas();
+    }
+
+    //funcion para mostrar alertas y asi
+    function mostrarMensaje(texto, esError) {
+        if (!estadoMensaje || !contenedorAlerta) return;
+
+        if (!texto) {
+            contenedorAlerta.style.display = 'none';
+            return;
+        }
+
+        estadoMensaje.textContent = texto;
+        contenedorAlerta.style.display = 'flex';
+        contenedorAlerta.classList.remove('alerta-error', 'alerta-exito');
+
+        if (esError) {
+            contenedorAlerta.classList.add('alerta-error');
+        } else {
+            contenedorAlerta.classList.add('alerta-exito');
+            setTimeout(() => {
+                contenedorAlerta.style.display = 'none';
+            }, 3000);
+        }
     }
 
     function escapeHTML(texto) {
@@ -99,8 +123,7 @@ const multas = (() => {
         if (!multa) return;
 
         if (multa.estado === 'Pagada') {
-            estadoMensaje.textContent = 'Esta multa ya fue pagada y el registro está cerrado.';
-            estadoMensaje.className = 'error';
+            mostrarMensaje('Esta multa ya fue pagada y el registro está cerrado.', true);
             return;
         }
 
@@ -115,29 +138,36 @@ const multas = (() => {
         formMulta.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    function cancelarEdicionMulta() {
+    function cancelarEdicionMulta(ocultarAlerta = true) {
         if (btnCancelarMulta) btnCancelarMulta.disabled = true; 
         idEnEdicion = null; 
-        formMulta.reset(); 
+        if (formMulta) formMulta.reset(); 
         
-        document.getElementById('multa-id').value = '';
-        document.getElementById('id-multa-display').value = '';
-        document.getElementById('status-multa').value = ''; 
+        const inputMultaId = document.getElementById('multa-id');
+        if (inputMultaId) inputMultaId.value = '';
+        
+        const inputMultaDisplay = document.getElementById('id-multa-display');
+        if (inputMultaDisplay) inputMultaDisplay.value = '';
+        
+        const inputStatus = document.getElementById('status-multa');
+        if (inputStatus) inputStatus.value = ''; 
+        
+        if (ocultarAlerta !== false) {
+            mostrarMensaje('', false); 
+        }
     }
 
     async function guardarMulta(e) {
         e.preventDefault();
 
         if (!idEnEdicion) {
-            estadoMensaje.textContent = 'Por favor selecciona una multa de la tabla para editar.';
-            estadoMensaje.className = 'error';
+            mostrarMensaje('Por favor selecciona una multa de la tabla para editar.', true);
             return;
         }
 
         const nuevoEstado = document.getElementById('status-multa').value;
         if (!nuevoEstado) {
-            estadoMensaje.textContent = 'Por favor, selecciona un estado (Pendiente o Pagada) para la multa.';
-            estadoMensaje.className = 'error';
+            mostrarMensaje('Por favor, selecciona un estado (Pendiente o Pagada) para la multa', true);
             btnSubmitMulta.disabled = false;
             return;
         }
@@ -163,21 +193,18 @@ const multas = (() => {
                 .eq('id_multa', idEnEdicion);
 
             if (error) {
-                estadoMensaje.textContent = 'Error al actualizar: ' + error.message;
-                estadoMensaje.className = 'error';
+                mostrarMensaje('Error al actualizar: ' + error.message, true);
                 return;
             }
 
-            estadoMensaje.textContent = 'Multa actualizada correctamente.';
-            estadoMensaje.className = 'ok';
+            mostrarMensaje('Multa actualizada correctamente.', false);
             
-
-            cancelarEdicionMulta();
+            cancelarEdicionMulta(false);
             cargarMultas();
 
         } catch (err) {
-            estadoMensaje.textContent = 'No se pudo conectar con el servidor.';
-            estadoMensaje.className = 'error';
+            console.error("Error en guardarMulta:", err); 
+            mostrarMensaje('Hubo un problema interno. Revisa la consola.', true);
         } finally {
             btnSubmitMulta.disabled = false;
         }
