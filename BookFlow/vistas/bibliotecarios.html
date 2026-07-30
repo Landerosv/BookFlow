@@ -1,0 +1,95 @@
+<!-- Formulario de registro / edición de libro -->
+<section class="panel panel-form">
+    <div class="panel-header">
+        <h2>Agregar o Editar Bibliotecario</h2>
+        <div class="panel-actions">
+            <button type="button" class="btn-secondary" disabled>Cancelar edición</button>
+            <button type="submit" form="form-crud" class="btn-primary">
+                <i data-lucide="save"></i>
+                Guardar
+            </button>
+        </div>
+    </div>
+
+    <form class="form-crud f-biblio" autocomplete="off">
+        <div class="field">
+            <label>Nombre</label>
+            <input type="text" required>
+        </div>
+
+        <div class="field">
+            <label>Usuario</label>
+            <input type="text">
+        </div>
+
+        <div class="field">
+            <label>Correo</label>
+            <input type="text">
+        </div>
+
+        <div class="field">
+            <label>Teléfono</label>
+            <input type="text">
+        </div>
+    </form>
+
+    <p id="estado-mensaje"></p>
+</section>
+
+<!-- Catálogo de bibliotecarios -->
+<section class="panel panel-loans">
+    <div class="panel-header">
+        <h2>Bibliotecarios</h2>
+    </div>
+
+    <div class="table-scroll">
+        <table class="table-prin">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Teléfono</th>
+                    <th>Usuario</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="tabla-bibliotecarios-body">
+                <tr class="skeleton-row">
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span></span></td>
+                </tr>
+                <tr class="skeleton-row">
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span></span></td>
+                </tr>
+                <tr class="skeleton-row">
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span></span></td>
+                </tr>
+                <tr class="skeleton-row">
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span></span></td>
+                </tr>
+                <tr class="skeleton-row">
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span class="skeleton skeleton-bar"></span></td>
+                    <td><span></span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>

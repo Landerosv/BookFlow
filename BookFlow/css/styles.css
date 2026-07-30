@@ -716,31 +716,28 @@ a {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    padding-bottom: 2.5rem;
 }
 
 /* ----- Formulario ----- */
 .panel-form {
     flex-shrink: 0;
+    padding-bottom: 0.5rem;
 }
 
-.p-libros {
-    padding: 0rem 1.5rem 0rem 1.5rem;
-}
-
-.form-libro {
+.form-crud {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1rem 1.2rem;
-    align-items: end;
+    gap: 1rem 2rem;
 }
 
-.form-libro .field {
+.form-crud .field {
     display: flex;
     flex-direction: column;
     gap: 0.35rem;
 }
 
-.form-libro label {
+.form-crud label {
     font-size: 0.8rem;
     font-weight: 600;
     letter-spacing: 0.03em;
@@ -748,7 +745,7 @@ a {
     color: var(--cafe);
 }
 
-.form-libro input {
+.form-crud input {
     font-family: var(--font-body);
     font-size: 0.9rem;
     color: var(--ink);
@@ -759,14 +756,23 @@ a {
     width: 100%;
 }
 
-.form-libro input:focus {
+.form-crud input:focus {
     outline: none;
     border-color: var(--terracota);
     background: var(--card);
 }
 
-.form-libro input::placeholder {
+.form-crud input::placeholder {
     color: #B7A79C;
+}
+
+.f-libros {
+    padding: 0rem 1rem 0rem 1rem;
+}
+
+.f-biblio {
+    padding: 0rem 1rem 0rem 1rem;
+    grid-template-columns: repeat(2, 1fr);
 }
 
 .field select{
@@ -800,7 +806,8 @@ a {
     -webkit-appearance:none;
     -moz-appearance:none;
 
-    font:inherit;
+    font:var(--font-body);
+    font-size: 0.9rem;
     cursor:pointer;
     transition:.2s;
 }
@@ -1030,7 +1037,7 @@ a {
         min-width: 480px;
     }
 
-    .form-libro {
+    .form-crud {
         grid-template-columns: 1fr;
     }
 
