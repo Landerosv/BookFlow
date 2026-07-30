@@ -35,7 +35,7 @@ const vistas = {
     editoriales: {
         titulo: "Editoriales",
         placeholder: "Buscar por nombre o idioma...",
-        init: null
+        init: () => Editoriales.init()
     },
 
     prestamos: {

@@ -30,6 +30,20 @@
         estadoMensaje.classList.add(esError ? 'error' : 'ok');
     } //end mostrar mensajes de error
     
+    function escapeHTML(texto) {
+    return String(texto ?? '').replace(/[&<>"']/g, (c) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    }[c]));
+    } //end escapar HTML (evita inyección en la tabla)
+
+    function normalizarEspacios(texto) {
+        return texto.trim().replace(/\s+/g, ' ');
+    } //end normalizar espacios repetidos
+
     async function cargarAutores() {
         const { data, error } = await sp
             .from("autores")
@@ -110,11 +124,11 @@
         libros.forEach((libro) => {
             const fila = document.createElement('tr');
             fila.innerHTML = `
-                <td>${libro.isbn}</td>
-                <td>${libro.nombre ?? ''}</td>
-                <td>${libro.autor ?? ''}</td>
-                <td>${libro.genero ?? ''}</td>
-                <td>${libro.editorial ?? ''}</td>
+                <td>${escapeHTML(libro.isbn)}</td>
+                <td>${escapeHTML(libro.nombre)}</td>
+                <td>${escapeHTML(libro.autor)}</td>
+                <td>${escapeHTML(libro.genero)}</td>
+                <td>${escapeHTML(libro.editorial)}</td>
                 <td>${libro.stock ?? 0}</td>
                 
                 <td class="acciones-cell">
@@ -156,7 +170,7 @@
         e.preventDefault();
 
         const isbn = document.getElementById('isbn').value.trim();
-        const nombre = document.getElementById('nombre-libro').value.trim();
+        const nombre = normalizarEspacios(document.getElementById('nombre-libro').value);
         const genero = document.getElementById('genero').value.trim();
         const idAutor = Number(document.getElementById("autor").value);
         const idEditorial = Number(document.getElementById("editorial").value);
@@ -164,6 +178,16 @@
  
         if (!/^\d{10,13}$/.test(isbn)) {
             mostrarMensaje('El ISBN debe ser numérico y tener exactamente entre 10 y 13 dígitos.', true);
+            return;
+        }
+
+        if (!nombre) {
+            mostrarMensaje('El nombre del libro es obligatorio.', true);
+            return;
+        }
+
+        if (!/[A-Za-zÁÉÍÓÚÑÜáéíóúñü]/.test(nombre)) {
+            mostrarMensaje('El nombre del libro debe contener al menos una letra.', true);
             return;
         }
  
@@ -251,7 +275,6 @@
         const isbnInput=document.getElementById("isbn");
         isbnInput.disabled=true;
  
-        btnSubmit.textContent = 'Guardar cambios';
         formLibro.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } //end cargar libro formulario
  
