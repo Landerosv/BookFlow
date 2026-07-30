@@ -1,6 +1,6 @@
 const Lectores = (() => {
 
-    let formLector, btnSubmit, btnCancelar, estadoMensaje, tablaBody;
+    let formLector, btnSubmit, btnCancelar, estadoMensaje, tablaBody, selectOrden;
     let lectores = [];
     let idEnEdicion = null;
 
@@ -11,9 +11,11 @@ const Lectores = (() => {
         estadoMensaje = document.getElementById('estado-mensaje-lector');
         tablaBody = document.getElementById('tabla-lectores-body');
 
+        selectOrden = document.getElementById('orden-lectores');
         idEnEdicion = null;
         formLector.addEventListener('submit', guardarLector);
         btnCancelar.addEventListener('click', cancelarEdicion);
+        if (selectOrden) selectOrden.addEventListener('change', renderTabla);
 
         await cargarLectores();
     } // end init lectores
@@ -38,6 +40,24 @@ const Lectores = (() => {
         return texto.trim().replace(/\s+/g, ' ');
     } // end normalizar espacios repetidos
 
+    function ordenarLectores(lista) {
+    const criterio = selectOrden ? selectOrden.value : '';
+    const copia = [...lista];
+
+    switch (criterio) {
+        case 'id-asc':
+            return copia.sort((a, b) => a.id - b.id);
+        case 'id-desc':
+            return copia.sort((a, b) => b.id - a.id);
+        case 'nombre-asc':
+            return copia.sort((a, b) => a.nombre.localeCompare(b.nombre));
+        case 'nombre-desc':
+            return copia.sort((a, b) => b.nombre.localeCompare(a.nombre));
+        default:
+            return copia;
+    }
+} // end ordenar lectores según el select
+
     async function cargarLectores() {
         try {
             const { data, error } = await sp
@@ -59,8 +79,8 @@ const Lectores = (() => {
 
     function renderTabla() {
         tablaBody.innerHTML = '';
-
-        lectores.forEach((lector) => {
+        const listaOrdenada = ordenarLectores(lectores);
+        listaOrdenada.forEach((lector) => {
             const fila = document.createElement('tr');
             fila.innerHTML = `
                 <td>${lector.id}</td>

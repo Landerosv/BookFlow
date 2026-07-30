@@ -1,6 +1,6 @@
 const Editoriales = (() => {
 
-    let formEditorial, btnSubmit, estadoMensaje, tablaBody, btnCancelar;
+    let formEditorial, btnSubmit, estadoMensaje, tablaBody, btnCancelar, selectOrden;
     let editoriales = [];
     let idEnEdicion = null;
 
@@ -11,9 +11,11 @@ const Editoriales = (() => {
         estadoMensaje = document.getElementById('estado-mensaje-editorial');
         tablaBody = document.getElementById('tabla-editoriales-body');
 
+        selectOrden = document.getElementById('orden-editoriales');
         idEnEdicion = null;
         formEditorial.addEventListener('submit', guardarEditorial);
         btnCancelar.addEventListener('click', cancelarEdicion);
+        if (selectOrden) selectOrden.addEventListener('change', renderTabla);
 
         await cargarEditoriales();
     } ///end init editoriales (la chingadera que lo une con principal)
@@ -38,6 +40,24 @@ const Editoriales = (() => {
         return texto.trim().replace(/\s+/g, ' ');
     } //end normalizar espacios repetidos
 
+    function ordenarEditoriales(lista) {
+    const criterio = selectOrden ? selectOrden.value : '';
+    const copia = [...lista];
+
+    switch (criterio) {
+        case 'id-asc':
+            return copia.sort((a, b) => a.id - b.id);
+        case 'id-desc':
+            return copia.sort((a, b) => b.id - a.id);
+        case 'nombre-asc':
+            return copia.sort((a, b) => a.nombre.localeCompare(b.nombre));
+        case 'nombre-desc':
+            return copia.sort((a, b) => b.nombre.localeCompare(a.nombre));
+        default:
+            return copia;
+    }
+} // end ordenar editoriales según el select
+
     async function cargarEditoriales() {
         try {
             const { data, error } = await sp
@@ -59,8 +79,8 @@ const Editoriales = (() => {
 
     function renderTabla() {
         tablaBody.innerHTML = '';
-
-        editoriales.forEach((editorial) => {
+        const listaOrdenada = ordenarEditoriales(editoriales);
+        listaOrdenada.forEach((editorial) => {
             const fila = document.createElement('tr');
             fila.innerHTML = `
                 <td>${editorial.id}</td>

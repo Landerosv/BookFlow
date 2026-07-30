@@ -1,7 +1,7 @@
     
     const Libros = (() => {
         
-    let formLibro, btnSubmit, estadoMensaje, tablaBody;
+    let formLibro, btnSubmit, estadoMensaje, tablaBody, selectOrden;
     let libros = [];
     let isbnEnEdicion = null;
     let autores = [];
@@ -15,9 +15,11 @@
         estadoMensaje = document.getElementById('estado-mensaje');
         tablaBody = document.getElementById('tabla-libros-body');
  
+        selectOrden = document.getElementById('orden-libros');
         isbnEnEdicion = null;
         formLibro.addEventListener('submit', guardarLibro);
         btnCancelar.addEventListener("click", cancelarEdicion);
+        if (selectOrden) selectOrden.addEventListener('change', renderTabla);
  
         await cargarAutores();
         await cargarEditoriales();
@@ -43,6 +45,28 @@
     function normalizarEspacios(texto) {
         return texto.trim().replace(/\s+/g, ' ');
     } //end normalizar espacios repetidos
+
+    function ordenarLibros(lista) {
+    const criterio = selectOrden ? selectOrden.value : '';
+    const copia = [...lista];
+
+    switch (criterio) {
+        case 'nombre-asc':
+            return copia.sort((a, b) => a.nombre.localeCompare(b.nombre));
+        case 'nombre-desc':
+            return copia.sort((a, b) => b.nombre.localeCompare(a.nombre));
+        case 'stock-asc':
+            return copia.sort((a, b) => (a.stock ?? 0) - (b.stock ?? 0));
+        case 'stock-desc':
+            return copia.sort((a, b) => (b.stock ?? 0) - (a.stock ?? 0));
+        case 'autor-asc':
+            return copia.sort((a, b) => (a.autor ?? '').localeCompare(b.autor ?? ''));
+        case 'autor-desc':
+            return copia.sort((a, b) => (b.autor ?? '').localeCompare(a.autor ?? ''));
+        default:
+            return copia;
+    }
+    } // end ordenar libros según el select
 
     async function cargarAutores() {
         const { data, error } = await sp
@@ -121,7 +145,9 @@
     function renderTabla() {
         tablaBody.innerHTML = '';
  
-        libros.forEach((libro) => {
+        const listaOrdenada = ordenarLibros(libros);
+
+        listaOrdenada.forEach((libro) => {
             const fila = document.createElement('tr');
             fila.innerHTML = `
                 <td>${escapeHTML(libro.isbn)}</td>
