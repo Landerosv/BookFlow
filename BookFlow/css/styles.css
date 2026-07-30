@@ -727,7 +727,7 @@ a {
 
 .form-crud {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
     gap: 1rem 2rem;
 }
 
@@ -764,15 +764,6 @@ a {
 
 .form-crud input::placeholder {
     color: #B7A79C;
-}
-
-.f-libros {
-    padding: 0rem 1rem 0rem 1rem;
-}
-
-.f-biblio {
-    padding: 0rem 1rem 0rem 1rem;
-    grid-template-columns: repeat(2, 1fr);
 }
 
 .field select{
@@ -823,7 +814,7 @@ a {
     pointer-events:none;
 }
 
-.form-libro .select-wrapper select{
+.form-crud .select-wrapper select{
     padding: 0.55rem 2.6rem 0.55rem 0.7rem;
     border: 1.5px solid var(--fondo-line);
     font-size: 0.9rem;
